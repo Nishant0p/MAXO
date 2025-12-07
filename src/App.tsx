@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, Search } from 'lucide-react';
+import ArchitectContact from './components/ArchitectContact';
 
-export default function MaxoLanding() {
+export function MaxoLanding() {
   const [isPreloading, setIsPreloading] = useState(true);
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
@@ -188,5 +189,14 @@ export default function MaxoLanding() {
       )}
     </div>
   );
+}
+
+// Lightweight path-based switch without adding a router
+export default function App() {
+  const path = typeof window !== 'undefined' ? window.location.pathname : '/';
+  if (path === '/architect') {
+    return <ArchitectContact />;
+  }
+  return <MaxoLanding />;
 }
 
