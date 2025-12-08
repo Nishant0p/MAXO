@@ -36,7 +36,7 @@ export function MaxoLanding() {
         autoPlay
         muted
         playsInline
-        src="public/MAXO_1.mp4" // Ensure this path is correct
+        src="/MAXO_1.mp4" // Vercel/Vite public assets must use root path
         style={{
           position: 'fixed',
           top: 0,
