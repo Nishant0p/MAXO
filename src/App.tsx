@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, Search } from 'lucide-react';
 import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import MenuOverlay from './components/MenuOverlay';
@@ -15,69 +15,7 @@ import WorkGallery from './components/WorkGallery';
 import NewsSection from './components/NewsSection';
 import Footer from './components/Footer';
 
-// Frame Animation Component
-function FrameAnimation({ isMobile }: { isMobile: boolean }) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ['start center', 'end center']
-  });
 
-  // Map scroll progress to frame number (0-79 for 80 frames) - slowed down
-  // Using a range that stretches the animation across more scroll distance
-  const frameNumber = useTransform(scrollYProgress, [0, 1], [0, 79]);
-  const [currentFrame, setCurrentFrame] = useState(0);
-
-  useEffect(() => {
-    // Add throttling to prevent too frequent updates
-    let timeout: ReturnType<typeof setTimeout>;
-    const unsubscribe = frameNumber.onChange((value) => {
-      clearTimeout(timeout);
-      timeout = setTimeout(() => {
-        setCurrentFrame(Math.min(Math.floor(value), 79));
-      }, 16); // ~60fps throttle
-    });
-    return () => {
-      clearTimeout(timeout);
-      unsubscribe();
-    };
-  }, [frameNumber]);
-
-  // Generate frame filename (001-080)
-  const frameFileName = String(currentFrame + 1).padStart(3, '0');
-  const imageSrc = `/ezgif-8fe967c091b2ac91-jpg/ezgif-frame-${frameFileName}.jpg`;
-
-  return (
-    <motion.div
-      ref={containerRef}
-      initial={{ opacity: 0, x: -50, scale: 0.9 }}
-      whileInView={{ opacity: 1, x: 0, scale: 1 }}
-      transition={{ duration: 0.8, delay: 0.2, type: 'spring', stiffness: 100 }}
-      viewport={{ once: false, amount: 0.3 }}
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        minHeight: '300px',
-        order: isMobile ? 1 : 0
-      }}
-    >
-      <img
-        src={imageSrc}
-        alt={`Frame ${currentFrame + 1}`}
-        style={{
-          width: '100%',
-          height: 'auto',
-          maxWidth: isMobile ? '400px' : '650px',
-          borderRadius: '12px',
-          objectFit: 'contain',
-          boxShadow: '0 20px 60px rgba(0, 0, 0, 0.15)',
-          transition: 'all 0.3s ease'
-        }}
-      />
-    </motion.div>
-  );
-}
 
 export function MaxoLanding() {
   const [isPreloading, setIsPreloading] = useState(true);

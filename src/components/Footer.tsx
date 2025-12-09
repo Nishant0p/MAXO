@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 
-export default function Footer() {
+export default function Footer({ navigateTo }: { navigateTo?: (page: string) => void }) {
   return (
     <footer style={{ position: 'sticky', top: 0, zIndex: 60, backgroundColor: '#000000', color: '#ffffff', paddingTop: '128px', paddingBottom: '48px', paddingLeft: '24px', paddingRight: '24px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: '80vh' }}>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '64px', marginBottom: '48px' }}>
@@ -14,7 +14,13 @@ export default function Footer() {
         </div>
       </div>
       <motion.div style={{ borderTop: '1px solid rgba(255,255,255,0.1)', marginTop: 'auto', paddingTop: '32px' }} initial={{ opacity: 0, y: 50 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }}>
-        <motion.h1 style={{ fontSize: 'clamp(4rem, 12vw, 16rem)', lineHeight: 0.95, fontWeight: 900, letterSpacing: '-0.02em', margin: 0, cursor: 'pointer' }} whileHover={{ color: '#999', transition: { duration: 0.3 } }}>LET'S TALK.</motion.h1>
+        <motion.h1 
+          style={{ fontSize: 'clamp(4rem, 12vw, 16rem)', lineHeight: 0.95, fontWeight: 900, letterSpacing: '-0.02em', margin: 0, cursor: 'pointer' }} 
+          whileHover={{ color: '#999', transition: { duration: 0.3 } }}
+          onClick={() => navigateTo?.('contact')}
+        >
+          LET'S TALK.
+        </motion.h1>
       </motion.div>
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '32px', marginTop: '48px', paddingTop: '32px', borderTop: '1px solid rgba(255,255,255,0.1)', fontSize: '12px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase' }}>
         <p style={{ margin: 0, color: '#666' }}>© 2025 MAXO Architects.</p>
