@@ -351,13 +351,13 @@ export function MaxoLanding() {
     </div>
 
     {/* Third Section: Work Gallery */}
-    <WorkGallery />
+    <WorkGallery isMobile={isMobile} />
 
     {/* Fourth Section: News Journal */}
-    <NewsSection />
+    <NewsSection isMobile={isMobile} />
 
     {/* Fifth Section: Footer */}
-    <Footer />
+    <Footer isMobile={isMobile} />
 
     </div>
   );

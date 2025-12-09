@@ -8,7 +8,7 @@ const projects = [
   { id: '04', title: 'Aero Terminal', loc: 'Dubai, UAE', img: 'https://images.unsplash.com/photo-1555636222-cae831e670b3?q=80&w=2677&auto=format&fit=crop' }
 ];
 
-export default function WorkGallery() {
+export default function WorkGallery({ isMobile }: { isMobile?: boolean }) {
   const targetRef = useRef(null);
   const { scrollYProgress } = useScroll({
     target: targetRef,
@@ -30,7 +30,7 @@ export default function WorkGallery() {
   const bgImage = `/ezgif-8fe967c091b2ac91-jpg/ezgif-frame-${frameFileName}.jpg`;
 
   // Horizontal scroll for projects
-  const x = useTransform(scrollYProgress, [0, 1], ["0%", "-60%"]);
+  const x = useTransform(scrollYProgress, [0, 1], ["0%", isMobile ? "-150%" : "-60%"]);
 
   return (
     <section ref={targetRef} style={{ height: '400vh', position: 'relative', zIndex: 40 }}>
@@ -57,15 +57,15 @@ export default function WorkGallery() {
         </div>
 
         {/* Content Overlay */}
-        <div style={{ position: 'relative', zIndex: 10, paddingLeft: '5vw', display: 'flex', flexDirection: 'column', justifyContent: 'center', height: '100%' }}>
+        <div style={{ position: 'relative', zIndex: 10, paddingLeft: isMobile ? '24px' : '5vw', display: 'flex', flexDirection: 'column', justifyContent: 'center', height: '100%' }}>
           <div style={{ marginBottom: '4vh' }}>
              <h2 style={{ color: 'white', fontSize: '1rem', textTransform: 'uppercase', letterSpacing: '0.2em', marginBottom: '1rem' }}>Selected Works</h2>
-             <h1 style={{ color: 'white', fontSize: 'clamp(3rem, 5vw, 6rem)', margin: 0, lineHeight: 1 }}>Architectural<br/>Excellence</h1>
+             <h1 style={{ color: 'white', fontSize: isMobile ? '3rem' : 'clamp(3rem, 5vw, 6rem)', margin: 0, lineHeight: 1 }}>Architectural<br/>Excellence</h1>
           </div>
 
-          <motion.div style={{ x, display: 'flex', gap: '4vw' }}>
+          <motion.div style={{ x, display: 'flex', gap: isMobile ? '24px' : '4vw' }}>
             {projects.map((p) => (
-              <div key={p.id} style={{ width: '16vw', minWidth: '180px', aspectRatio: '3/4', position: 'relative', flexShrink: 0, cursor: 'pointer' }}>
+              <div key={p.id} style={{ width: isMobile ? '70vw' : '18vw', minWidth: isMobile ? '260px' : '180px', aspectRatio: '3/4', position: 'relative', flexShrink: 0, cursor: 'pointer' }}>
                 <div style={{ width: '100%', height: '100%', overflow: 'hidden', borderRadius: '4px' }}>
                   <motion.img 
                     src={p.img} 
