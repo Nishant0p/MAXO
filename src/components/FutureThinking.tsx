@@ -1,20 +1,13 @@
-import { useState, useEffect } from 'react';
+// import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Menu, Search, X, Lightbulb, Zap, Globe, Cpu, Leaf, Users } from 'lucide-react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Lightbulb, Zap, Globe, Cpu, Leaf, Users } from 'lucide-react';
+// import { useLocation, useNavigate } from 'react-router-dom';
 import Footer from './Footer';
-import MenuOverlay from './MenuOverlay';
-import DarkLuxuryMenu from './DarkLuxuryMenu';
+import StaggeredMenu from './StaggeredMenu';
 
 export default function FutureThinking({ navigateTo }: { navigateTo: (page: string) => void }) {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  // Close menu when route changes
-  useEffect(() => {
-    setIsMenuOpen(false);
-  }, [location]);
+  // const location = useLocation();
+  // const navigate = useNavigate();
 
   const innovations = [
     {
@@ -79,59 +72,22 @@ export default function FutureThinking({ navigateTo }: { navigateTo: (page: stri
   return (
     <div style={{ backgroundColor: 'white', color: 'black', minHeight: '100vh' }}>
       {/* Navigation */}
-      <nav style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        zIndex: 50,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: '20px 40px',
-        backgroundColor: 'rgba(255, 255, 255, 0.9)',
-        backdropFilter: 'blur(20px)'
-      }}>
-        <div 
-          style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            gap: '8px', 
-            cursor: 'pointer',
-            zIndex: 60
-          }}
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-        >
-          {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          <span style={{ fontSize: '12px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '2px' }}>Menu</span>
-        </div>
+      <StaggeredMenu 
+        items={[
+          { label: 'About', ariaLabel: 'About', link: '/about' },
+          { label: 'Our Work', ariaLabel: 'Our Work', link: '/work' },
+          { label: 'Future Thinking', ariaLabel: 'Future Thinking', link: '/future' },
+          { label: 'News', ariaLabel: 'News', link: '/news' },
+          { label: 'Contact', ariaLabel: 'Contact', link: '/contact' },
+        ]} 
+        position="left"
+        colors={['#333', '#111', '#000']}
+        menuButtonColor="white"
+        openMenuButtonColor="white"
+        accentColor="#888"
+      />
 
-        <div style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)' }}>
-          <button 
-            onClick={() => navigateTo('home')}
-            style={{ background: 'none', border: 'none', cursor: 'pointer' }}
-          >
-            <h1 style={{
-              fontSize: '1.5rem',
-              fontWeight: 900,
-              textTransform: 'uppercase',
-              letterSpacing: '0.1em',
-              margin: 0,
-              color: 'black'
-            }}>
-              MAXO
-            </h1>
-          </button>
-        </div>
 
-        <div>
-          <Search size={24} />
-        </div>
-      </nav>
-
-      {/* Menu Components - Same as home page */}
-      <MenuOverlay isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
-      <DarkLuxuryMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} onNavigate={(path) => navigate(path)} />
 
       {/* Hero Section */}
       <motion.section

@@ -1,9 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, Search } from 'lucide-react';
-import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
-import MenuOverlay from './components/MenuOverlay';
-import DarkLuxuryMenu from './components/DarkLuxuryMenu';
+// import { Search } from 'lucide-react';
+import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
+import StaggeredMenu from './components/StaggeredMenu';
 import ArchitectContact from './components/ArchitectContact';
 import AboutUs from './components/AboutUs';
 import ContactUs from './components/ContactUs';
@@ -20,15 +19,9 @@ import Footer from './components/Footer';
 export function MaxoLanding() {
   const [isPreloading, setIsPreloading] = useState(true);
   const videoRef = useRef<HTMLVideoElement | null>(null);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const location = useLocation();
-  const navigate = useNavigate();
-
-  // Close menu when route changes
-  useEffect(() => {
-    setIsMenuOpen(false);
-  }, [location]);
+  // const location = useLocation();
+  // const navigate = useNavigate();
 
   // Trigger transition at 8s and SLOW the video instead of freezing
   useEffect(() => {
@@ -48,6 +41,14 @@ export function MaxoLanding() {
     window.addEventListener('resize', update);
     return () => window.removeEventListener('resize', update);
   }, []);
+
+  const menuItems = [
+    { label: 'About', ariaLabel: 'About', link: '/about' },
+    { label: 'Our Work', ariaLabel: 'Our Work', link: '/work' },
+    { label: 'Future Thinking', ariaLabel: 'Future Thinking', link: '/future' },
+    { label: 'News', ariaLabel: 'News', link: '/news' },
+    { label: 'Contact', ariaLabel: 'Contact', link: '/contact' },
+  ];
 
   return (
     <div style={{ position: 'relative', width: '100%', backgroundColor: 'black', color: 'white', fontFamily: 'sans-serif', minHeight: '100vh' }}>
@@ -150,177 +151,15 @@ export function MaxoLanding() {
 
       {/* PHASE B: Navbar (Top Center) */}
       {!isPreloading && (
-        <nav style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          zIndex: 50,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          padding: isMobile ? '15px 20px' : '20px 40px'
-        }}>
-          {/* Menu (left) - clickable */}
-          <button
-            aria-label="Open menu"
-            onClick={() => setIsMenuOpen((v) => !v)}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: '8px',
-              padding: isMobile ? '6px 8px' : '6px 10px',
-              borderRadius: 12,
-              background: 'linear-gradient(180deg, rgba(255,255,255,0.16), rgba(255,255,255,0.06))',
-              border: '1px solid rgba(255,255,255,0.22)',
-              color: 'white',
-              cursor: 'pointer',
-              outline: 'none',
-            }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.background =
-                'linear-gradient(180deg, rgba(255,255,255,0.22), rgba(255,255,255,0.12))';
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLButtonElement).style.background =
-                'linear-gradient(180deg, rgba(255,255,255,0.16), rgba(255,255,255,0.06))';
-            }}
-          >
-            <Menu size={isMobile ? 20 : 18} />
-            {/* Hide Menu text on mobile to keep logo centered */}
-            {!isMobile && <span style={{ fontSize: '12px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.18em' }}>Menu</span>}
-          </button>
-
-          {/* Logo (center absolute) */}
-          <div style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)' }}>
-            <motion.h1
-              layoutId="brand-logo"
-              transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1] }}
-              style={{
-                fontSize: isMobile ? '1.2rem' : '1.5rem',
-                fontWeight: 900,
-                textTransform: 'uppercase',
-                letterSpacing: '0.1em',
-                margin: 0,
-                color: 'white'
-              }}
-            >
-              MAXO
-            </motion.h1>
-          </div>
-
-          {/* Search (right) */}
-          <div>
-            <Search size={isMobile ? 20 : 24} />
-          </div>
-        </nav>
+        <StaggeredMenu 
+          items={menuItems} 
+          position="left"
+          colors={['#333', '#111', '#000']}
+          menuButtonColor="white"
+          openMenuButtonColor="white"
+          accentColor="#888"
+        />
       )}
-
-      {/* Full-screen white strip overlay menu */}
-      <AnimatePresence>
-        {!isPreloading && isMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            style={{ position: 'fixed', inset: 0, zIndex: 80, overflow: 'hidden' }}
-          >
-            {/* Strips */}
-            {Array.from({ length: isMobile ? 5 : 7 }).map((_, i, arr) => {
-              const h = 100 / arr.length;
-              const delay = 0.05 * i;
-              return (
-                <motion.div
-                  key={i}
-                  initial={{ y: '100%' }}
-                  animate={{ y: '0%' }}
-                  exit={{ y: '100%' }}
-                  transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1], delay }}
-                  style={{
-                    position: 'absolute',
-                    left: 0,
-                    right: 0,
-                    top: `${i * h}%`,
-                    height: `${h}%`,
-                    background: '#ffffff',
-                    boxShadow: '0 -8px 24px rgba(0,0,0,0.08), 0 12px 24px rgba(0,0,0,0.12)',
-                    transform: 'translateZ(0)',
-                  }}
-                />
-              );
-            })}
-
-            {/* Content layer */}
-            <div
-              onClick={(e) => e.stopPropagation()}
-              style={{
-                position: 'absolute', inset: 0, zIndex: 81,
-                display: 'flex',
-                flexDirection: isMobile ? 'column' : 'row',
-                padding: isMobile ? '24px 20px' : '80px 64px',
-                gap: isMobile ? 24 : 40,
-              }}
-            >
-              {/* Left: Menu items */}
-              <div style={{ flex: isMobile ? 'none' : '0 0 45%', display: 'flex', flexDirection: 'column', gap: isMobile ? 12 : 18 }}>
-                {[
-                  { label: 'About', href: '/about' },
-                  { label: 'Our Work', href: '/work' },
-                  { label: 'Future Thinking', href: '/future' },
-                  { label: 'News', href: '/news' },
-                  { label: 'Contact', href: '/contact' },
-                  { label: 'Architect', href: '/architect' },
-                ].map((item, idx) => (
-                  <motion.a
-                    key={item.href}
-                    href={item.href}
-                    initial={{ opacity: 0, x: -12 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: 0.3 + idx * 0.06, duration: 0.3 }}
-                    onClick={() => setIsMenuOpen(false)}
-                    style={{
-                      color: '#111',
-                      textDecoration: 'none',
-                      fontSize: isMobile ? 24 : 42,
-                      fontWeight: 700,
-                      letterSpacing: '0.06em',
-                      textTransform: 'uppercase',
-                      lineHeight: 1.2,
-                    }}
-                  >
-                    {item.label}
-                  </motion.a>
-                ))}
-              </div>
-
-              {/* Right column removed: photo tiles intentionally removed */}
-
-              </div>
-
-            {/* Click anywhere to close */}
-            <div
-              onClick={() => setIsMenuOpen(false)}
-              style={{ position: 'absolute', inset: 0, zIndex: 79 }}
-            ></div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Menu Toggle Button */}
-      <motion.button
-        onClick={() => setIsMenuOpen(!isMenuOpen)}
-        className="fixed top-6 right-6 z-50 p-2 rounded-full bg-black/20 backdrop-blur-sm text-white hover:bg-black/30 transition-colors"
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-      >
-        <Menu size={24} />
-      </motion.button>
-
-      {/* Menu Overlay */}
-      <MenuOverlay isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
-
-      {/* Dark Luxury Menu - New Strip Layout */}
-      <DarkLuxuryMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} onNavigate={(path) => navigate(path)} />
 
       {/* ----------------------------------------------------
           LAYER 4: Main Content

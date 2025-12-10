@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { Menu, Search, X, Users, Target, Award, Heart } from 'lucide-react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { Users, Target, Award, Heart } from 'lucide-react';
+// import { useNavigate, useLocation } from 'react-router-dom';
 import Footer from './Footer';
-import MenuOverlay from './MenuOverlay';
-import DarkLuxuryMenu from './DarkLuxuryMenu';
+import StaggeredMenu from './StaggeredMenu';
 
 // --- CSS Scroll Grid Data & Configuration ---
 const gridItemsData = [
@@ -205,13 +204,13 @@ const TypewriterMAXO = ({ delay = 0 }: { delay?: number }) => {
 
 // --- Main About Us Component ---
 export default function AboutUs() {
-  const navigate = useNavigate();
-  const location = useLocation();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  // const navigate = useNavigate();
+  // const location = useLocation();
+  // const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  useEffect(() => {
-    setIsMenuOpen(false);
-  }, [location]);
+  // useEffect(() => {
+  //   setIsMenuOpen(false);
+  // }, [location]);
 
   const values = [
     {
@@ -273,58 +272,20 @@ export default function AboutUs() {
       </style>
 
       {/* Navigation */}
-      <nav style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        zIndex: 100,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: '20px 40px',
-        backgroundColor: 'rgba(255, 255, 255, 0.9)',
-        backdropFilter: 'blur(20px)'
-      }}>
-        <div 
-          style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            gap: '8px', 
-            cursor: 'pointer',
-            zIndex: 60
-          }}
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-        >
-          {isMenuOpen ? <X size={24} style={{ color: 'black' }} /> : <Menu size={24} style={{ color: 'black' }} />}
-          <span style={{ fontSize: '12px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '2px', color: 'black' }}>Menu</span>
-        </div>
-
-        <div style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)' }}>
-          <button 
-            onClick={() => navigate('/')}
-            style={{ background: 'none', border: 'none', cursor: 'pointer' }}
-          >
-            <h1 style={{
-              fontSize: '1.5rem',
-              fontWeight: 900,
-              textTransform: 'uppercase',
-              letterSpacing: '0.1em',
-              margin: 0,
-              color: 'black'
-            }}>
-              MAXO
-            </h1>
-          </button>
-        </div>
-
-        <div style={{ color: 'black' }}>
-          <Search size={24} />
-        </div>
-      </nav>
-
-      <MenuOverlay isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
-      <DarkLuxuryMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} onNavigate={(path) => navigate(path)} />
+      <StaggeredMenu 
+        items={[
+          { label: 'About', ariaLabel: 'About', link: '/about' },
+          { label: 'Our Work', ariaLabel: 'Our Work', link: '/work' },
+          { label: 'Future Thinking', ariaLabel: 'Future Thinking', link: '/future' },
+          { label: 'News', ariaLabel: 'News', link: '/news' },
+          { label: 'Contact', ariaLabel: 'Contact', link: '/contact' },
+        ]} 
+        position="left"
+        colors={['#333', '#111', '#000']}
+        menuButtonColor="white"
+        openMenuButtonColor="white"
+        accentColor="#888"
+      />
 
       {/* CSS Scroll Grid Hero Section */}
       <CSSScrollGrid />

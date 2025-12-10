@@ -1,20 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Menu, Search, X, MapPin, Phone, Mail, Send } from 'lucide-react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { MapPin, Phone, Mail, Send } from 'lucide-react';
+// import { useLocation, useNavigate } from 'react-router-dom';
 import Footer from './Footer';
-import MenuOverlay from './MenuOverlay';
-import DarkLuxuryMenu from './DarkLuxuryMenu';
+import StaggeredMenu from './StaggeredMenu';
 
 export default function ContactUs({ navigateTo }: { navigateTo: (page: string) => void }) {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  // const location = useLocation();
+  // const navigate = useNavigate();
 
-  // Close menu when route changes
-  useEffect(() => {
-    setIsMenuOpen(false);
-  }, [location]);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -23,6 +17,14 @@ export default function ContactUs({ navigateTo }: { navigateTo: (page: string) =
     message: '',
     projectType: ''
   });
+
+  const menuItems = [
+    { label: 'About', ariaLabel: 'About', link: '/about' },
+    { label: 'Our Work', ariaLabel: 'Our Work', link: '/work' },
+    { label: 'Future Thinking', ariaLabel: 'Future Thinking', link: '/future' },
+    { label: 'News', ariaLabel: 'News', link: '/news' },
+    { label: 'Contact', ariaLabel: 'Contact', link: '/contact' },
+  ];
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -66,59 +68,14 @@ export default function ContactUs({ navigateTo }: { navigateTo: (page: string) =
   return (
     <div style={{ backgroundColor: 'white', color: 'black', minHeight: '100vh' }}>
       {/* Navigation */}
-      <nav style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        zIndex: 50,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: '20px 40px',
-        backgroundColor: 'rgba(255, 255, 255, 0.9)',
-        backdropFilter: 'blur(20px)'
-      }}>
-        <div 
-          style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            gap: '8px', 
-            cursor: 'pointer',
-            zIndex: 60
-          }}
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-        >
-          {isMenuOpen ? <X size={24} style={{ color: 'black' }} /> : <Menu size={24} style={{ color: 'black' }} />}
-          <span style={{ fontSize: '12px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '2px', color: 'black' }}>Menu</span>
-        </div>
-
-        <div style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)' }}>
-          <button 
-            onClick={() => navigateTo('home')}
-            style={{ background: 'none', border: 'none', cursor: 'pointer' }}
-          >
-            <h1 style={{
-              fontSize: '1.5rem',
-              fontWeight: 900,
-              textTransform: 'uppercase',
-              letterSpacing: '0.1em',
-              margin: 0,
-              color: 'black'
-            }}>
-              MAXO
-            </h1>
-          </button>
-        </div>
-
-        <div style={{ color: 'black' }}>
-          <Search size={24} />
-        </div>
-      </nav>
-
-      {/* Menu Components - Same as home page */}
-      <MenuOverlay isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
-      <DarkLuxuryMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} onNavigate={(path) => navigate(path)} />
+      <StaggeredMenu 
+        items={menuItems} 
+        position="left"
+        colors={['#333', '#111', '#000']}
+        menuButtonColor="white"
+        openMenuButtonColor="white"
+        accentColor="#888"
+      />
 
       {/* Hero Section */}
       <motion.section

@@ -33,7 +33,6 @@ export default function MenuOverlay({ isOpen, onClose }: MenuOverlayProps) {
     { label: 'Future Thinking', href: '/future' },
     { label: 'News', href: '/news' },
     { label: 'Contact', href: '/contact' },
-    { label: 'Architect', href: '/architect' },
   ];
 
   
