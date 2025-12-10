@@ -1,10 +1,20 @@
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { Menu, Search, X, MapPin, Phone, Mail, Send } from 'lucide-react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Footer from './Footer';
+import MenuOverlay from './MenuOverlay';
+import DarkLuxuryMenu from './DarkLuxuryMenu';
 
 export default function ContactUs({ navigateTo }: { navigateTo: (page: string) => void }) {
+  const location = useLocation();
+  const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  // Close menu when route changes
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [location]);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -106,75 +116,9 @@ export default function ContactUs({ navigateTo }: { navigateTo: (page: string) =
         </div>
       </nav>
 
-      {/* Dropdown Menu */}
-      <AnimatePresence>
-        {isMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3, ease: 'easeInOut' }}
-            style={{
-              position: 'fixed',
-              top: '80px',
-              left: '40px',
-              right: '40px',
-              backgroundColor: 'rgba(255, 255, 255, 0.95)',
-              backdropFilter: 'blur(20px)',
-              borderRadius: '12px',
-              padding: '30px',
-              zIndex: 55,
-              border: '1px solid rgba(0, 0, 0, 0.1)'
-            }}
-          >
-            <div style={{ display: 'grid', gap: '20px', maxWidth: '300px' }}>
-              {[
-                { title: 'About Us', page: 'about' },
-                { title: 'Our Work', page: 'work' },
-                { title: 'Future Thinking', page: 'future' },
-                { title: 'News', page: 'news' },
-                { title: 'Contact Us', page: 'contact' }
-              ].map((item, index) => (
-                <motion.button
-                  key={item.title}
-                  onClick={() => {
-                    navigateTo(item.page);
-                    setIsMenuOpen(false);
-                  }}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.1, duration: 0.3 }}
-                  style={{
-                    background: 'none',
-                    border: 'none',
-                    color: 'black',
-                    textDecoration: 'none',
-                    fontSize: '1.5rem',
-                    fontWeight: '300',
-                    letterSpacing: '0.05em',
-                    padding: '10px 0',
-                    borderBottom: index < 4 ? '1px solid rgba(0, 0, 0, 0.1)' : 'none',
-                    transition: 'all 0.3s ease',
-                    cursor: 'pointer',
-                    width: '100%',
-                    textAlign: 'left'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.color = '#666';
-                    e.currentTarget.style.paddingLeft = '10px';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.color = 'black';
-                    e.currentTarget.style.paddingLeft = '0';
-                  }}
-                >
-                  {item.title}
-                </motion.button>
-              ))}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Menu Components - Same as home page */}
+      <MenuOverlay isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} />
+      <DarkLuxuryMenu isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} onNavigate={(path) => navigate(path)} />
 
       {/* Hero Section */}
       <motion.section

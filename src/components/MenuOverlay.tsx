@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { X } from 'lucide-react';
 
 type MenuItem = {
   label: string;
@@ -95,6 +96,25 @@ export default function MenuOverlay({ isOpen, onClose }: MenuOverlayProps) {
               gap: isMobile ? 24 : 40,
             }}
           >
+            {/* Close Button */}
+            <motion.button
+              onClick={onClose}
+              style={{
+                position: 'absolute',
+                top: isMobile ? '20px' : '32px',
+                right: isMobile ? '20px' : '32px',
+                background: 'transparent',
+                border: 'none',
+                color: '#111',
+                cursor: 'pointer',
+                zIndex: 82,
+              }}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <X size={isMobile ? 28 : 32} />
+            </motion.button>
+
             {/* Left: Menu items */}
             <div
               style={{
