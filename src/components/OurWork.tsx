@@ -1,343 +1,203 @@
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { ExternalLink, Calendar, MapPin } from 'lucide-react';
-import { useLocation } from 'react-router-dom';
-import Footer from './Footer';
+import { useState } from 'react';
+import { motion } from 'framer-motion';
+import { ArrowUpRight } from 'lucide-react';
 import StaggeredMenu from './StaggeredMenu';
+import './OurWork.css';
 
-export default function OurWork({ navigateTo }: { navigateTo: (page: string) => void }) {
-  const location = useLocation();
-  // const navigate = useNavigate();
-  const [selectedProject, setSelectedProject] = useState<number | null>(null);
+// Project data with images
+const projectItems = [
+  {
+    id: 1,
+    title: 'Commercial Architecture',
+    image: 'https://images.unsplash.com/photo-1486718448742-163732cd1544?q=80&w=2574&auto=format&fit=crop',
+    description: 'Creating innovative commercial spaces that inspire productivity and collaboration.',
+    links: [
+      { id: 1, name: 'Office Towers' },
+      { id: 2, name: 'Retail Spaces' },
+      { id: 3, name: 'Mixed-Use' },
+      { id: 4, name: 'Corporate HQ' }
+    ]
+  },
+  {
+    id: 2,
+    title: 'Residential Design',
+    image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2670&auto=format&fit=crop',
+    description: 'Crafting homes that blend luxury with functionality and sustainable living.',
+    links: [
+      { id: 1, name: 'Luxury Villas' },
+      { id: 2, name: 'Apartments' },
+      { id: 3, name: 'Townhouses' },
+      { id: 4, name: 'Penthouses' }
+    ]
+  },
+  {
+    id: 3,
+    title: 'Cultural & Public',
+    image: 'https://images.unsplash.com/photo-1511818966892-d7d671e672a2?q=80&w=2707&auto=format&fit=crop',
+    description: 'Designing museums, galleries, and public spaces that enrich communities.',
+    links: [
+      { id: 1, name: 'Museums' },
+      { id: 2, name: 'Galleries' },
+      { id: 3, name: 'Libraries' },
+      { id: 4, name: 'Civic Centers' }
+    ]
+  },
+  {
+    id: 4,
+    title: 'Hospitality',
+    image: 'https://images.unsplash.com/photo-1555636222-cae831e670b3?q=80&w=2677&auto=format&fit=crop',
+    description: 'Creating memorable hospitality experiences through thoughtful architecture.',
+    links: [
+      { id: 1, name: 'Hotels' },
+      { id: 2, name: 'Resorts' },
+      { id: 3, name: 'Restaurants' },
+      { id: 4, name: 'Spas' }
+    ]
+  }
+];
 
-  // Close menu when route changes
-  useEffect(() => {
-    // Menu closes itself on navigation
-  }, [location]);
+// Tag component
+const Tag = ({ name, isHovered }: { name: string; isHovered: boolean }) => (
+  <motion.span
+    className="ourwork-tag"
+    whileHover={{ scale: 1.05, backgroundColor: '#000', color: '#fff' }}
+    animate={{ 
+      backgroundColor: isHovered ? 'rgba(0,0,0,0.1)' : 'rgba(0,0,0,0.05)',
+    }}
+    transition={{ duration: 0.3 }}
+  >
+    {name}
+  </motion.span>
+);
 
-  const projects = [
-    {
-      id: 1,
-      title: 'Modern Villa Residence',
-      category: 'Residential',
-      location: 'Los Angeles, CA',
-      year: '2024',
-      description: 'A stunning modern villa that seamlessly blends indoor and outdoor living spaces with clean lines and sustainable materials.',
-      image: '/project-1.jpg',
-      details: 'This 5,000 sq ft villa features floor-to-ceiling windows, an infinity pool, and smart home integration throughout.'
-    },
-    {
-      id: 2,
-      title: 'Corporate Headquarters',
-      category: 'Commercial',
-      location: 'New York, NY',
-      year: '2023',
-      description: 'A contemporary office space designed to inspire collaboration and productivity in the heart of Manhattan.',
-      image: '/project-2.jpg',
-      details: 'The 50,000 sq ft space includes flexible workspaces, wellness areas, and rooftop gardens.'
-    },
-    {
-      id: 3,
-      title: 'Boutique Hotel Design',
-      category: 'Hospitality',
-      location: 'Miami, FL',
-      year: '2024',
-      description: 'A luxury boutique hotel that captures the essence of Miami\'s vibrant culture and beachfront lifestyle.',
-      image: '/project-3.jpg',
-      details: '120 rooms designed with local artwork, ocean views, and sustainable luxury amenities.'
-    },
-    {
-      id: 4,
-      title: 'Urban Loft Renovation',
-      category: 'Residential',
-      location: 'Chicago, IL',
-      year: '2023',
-      description: 'A complete transformation of an industrial loft into a modern living space while preserving its historic character.',
-      image: '/project-4.jpg',
-      details: 'Exposed brick walls, steel beams, and contemporary furnishings create a perfect urban retreat.'
-    },
-    {
-      id: 5,
-      title: 'Art Gallery & Studio',
-      category: 'Cultural',
-      location: 'Portland, OR',
-      year: '2024',
-      description: 'A minimalist gallery space that allows art to take center stage while providing flexible exhibition areas.',
-      image: '/project-5.jpg',
-      details: 'Natural lighting, movable walls, and integrated audio-visual systems enhance the viewing experience.'
-    },
-    {
-      id: 6,
-      title: 'Sustainable Office Complex',
-      category: 'Commercial',
-      location: 'Seattle, WA',
-      year: '2023',
-      description: 'An environmentally conscious office building featuring green roofs, solar panels, and energy-efficient systems.',
-      image: '/project-6.jpg',
-      details: 'LEED Platinum certified with rainwater collection and geothermal heating systems.'
-    }
+// Project Card component
+const ProjectCard = ({ 
+  item, 
+  isHovered, 
+  onHover, 
+  onLeave 
+}: { 
+  item: typeof projectItems[0]; 
+  isHovered: boolean;
+  onHover: () => void;
+  onLeave: () => void;
+}) => (
+  <motion.div
+    className="ourwork-card"
+    onMouseEnter={onHover}
+    onMouseLeave={onLeave}
+    initial={{ opacity: 0, y: 40 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true }}
+    transition={{ duration: 0.6 }}
+  >
+    <div className="ourwork-card-image-wrapper">
+      <motion.img
+        src={item.image}
+        alt={item.title}
+        className="ourwork-card-image"
+        animate={{ scale: isHovered ? 1.08 : 1 }}
+        transition={{ duration: 0.6, ease: [0.33, 1, 0.68, 1] }}
+      />
+      <motion.div 
+        className="ourwork-card-overlay"
+        animate={{ opacity: isHovered ? 0.3 : 0.5 }}
+        transition={{ duration: 0.4 }}
+      />
+      
+      {/* View Project Button */}
+      <motion.div
+        className="ourwork-view-button"
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ 
+          opacity: isHovered ? 1 : 0,
+          scale: isHovered ? 1 : 0.8
+        }}
+        transition={{ duration: 0.3 }}
+      >
+        <span>View Projects</span>
+        <ArrowUpRight size={18} />
+      </motion.div>
+    </div>
+    
+    <p className="ourwork-card-description">{item.description}</p>
+  </motion.div>
+);
+
+export default function OurWork() {
+  const [hoveredId, setHoveredId] = useState<number | null>(null);
+
+  const menuItems = [
+    { label: 'About', ariaLabel: 'About', link: '/about' },
+    { label: 'Our Work', ariaLabel: 'Our Work', link: '/work' },
+    { label: 'Future Thinking', ariaLabel: 'Future Thinking', link: '/future' },
+    { label: 'News', ariaLabel: 'News', link: '/news' },
+    { label: 'Contact', ariaLabel: 'Contact', link: '/contact' },
   ];
 
-  const categories = ['All', 'Residential', 'Commercial', 'Hospitality', 'Cultural'];
-  const [activeCategory, setActiveCategory] = useState('All');
-
-  const filteredProjects = activeCategory === 'All' 
-    ? projects 
-    : projects.filter(project => project.category === activeCategory);
-
   return (
-    <div style={{ backgroundColor: 'white', color: 'black', minHeight: '100vh' }}>
-      {/* Navigation */}
+    <section className="ourwork-section">
+      {/* Navigation Menu */}
       <StaggeredMenu 
-        items={[
-          { label: 'About', ariaLabel: 'About', link: '/about' },
-          { label: 'Our Work', ariaLabel: 'Our Work', link: '/work' },
-          { label: 'Future Thinking', ariaLabel: 'Future Thinking', link: '/future' },
-          { label: 'News', ariaLabel: 'News', link: '/news' },
-          { label: 'Contact', ariaLabel: 'Contact', link: '/contact' },
-        ]} 
+        items={menuItems} 
         position="left"
-        colors={['#333', '#111', '#000']}
-        menuButtonColor="white"
+        colors={['#f5f5f5', '#e0e0e0', '#d0d0d0']}
+        menuButtonColor="#000"
         openMenuButtonColor="white"
-        accentColor="#888"
+        accentColor="#666"
       />
 
-      {/* Hero Section */}
-      <motion.section
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1 }}
-        style={{
-          padding: '120px 40px 80px',
-          textAlign: 'center',
-          background: 'linear-gradient(135deg, rgba(250,250,250,0.9) 0%, rgba(240,240,240,0.9) 100%)'
-        }}
+      {/* Header */}
+      <motion.div 
+        className="ourwork-header"
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
       >
-        <motion.h1
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.8 }}
-          style={{
-            fontSize: '4rem',
-            fontWeight: 300,
-            lineHeight: 1.1,
-            margin: '0 0 30px 0'
-          }}
-        >
-          Our <span style={{ fontWeight: 'bold' }}>Work</span>
-        </motion.h1>
-        <motion.p
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, duration: 0.8 }}
-          style={{
-            fontSize: '1.2rem',
-            color: 'rgba(0, 0, 0, 0.8)',
-            maxWidth: '800px',
-            margin: '0 auto',
-            lineHeight: 1.6
-          }}
-        >
-          Explore our portfolio of innovative design projects that showcase our commitment 
-          to creating exceptional spaces and experiences.
-        </motion.p>
-      </motion.section>
+        <div className="ourwork-header-content">
+          <span className="ourwork-label">Our Services</span>
+          <h1 className="ourwork-title">
+            Architectural <span className="italic">Excellence</span>
+          </h1>
+          <p className="ourwork-subtitle">
+            We bring visionary designs to life through innovative architecture and sustainable solutions.
+          </p>
+        </div>
+      </motion.div>
 
-      {/* Filter Categories */}
-      <section style={{ padding: '0 40px 40px', maxWidth: '1200px', margin: '0 auto' }}>
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6, duration: 0.8 }}
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-            gap: '20px',
-            flexWrap: 'wrap',
-            marginBottom: '60px'
-          }}
-        >
-          {categories.map((category) => (
-            <button
-              key={category}
-              onClick={() => setActiveCategory(category)}
-              style={{
-                padding: '12px 24px',
-                borderRadius: '25px',
-                border: '1px solid rgba(0, 0, 0, 0.2)',
-                backgroundColor: activeCategory === category ? 'black' : 'transparent',
-                color: activeCategory === category ? 'white' : 'black',
-                fontSize: '0.9rem',
-                fontWeight: '500',
-                cursor: 'pointer',
-                transition: 'all 0.3s ease',
-                textTransform: 'uppercase',
-                letterSpacing: '0.5px'
-              }}
-              onMouseEnter={(e) => {
-                if (activeCategory !== category) {
-                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.1)';
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (activeCategory !== category) {
-                  e.currentTarget.style.backgroundColor = 'transparent';
-                }
-              }}
-            >
-              {category}
-            </button>
-          ))}
-        </motion.div>
+      {/* Projects Grid */}
+      <div className="ourwork-grid">
+        {projectItems.map((item) => (
+          <div className="ourwork-item" key={item.id}>
+            {/* Title with dot */}
+            <div className="ourwork-item-header">
+              <span className="ourwork-dot" />
+              <h2 className="ourwork-item-title">{item.title}</h2>
+            </div>
+            
+            {/* Project Card */}
+            <ProjectCard
+              item={item}
+              isHovered={hoveredId === item.id}
+              onHover={() => setHoveredId(item.id)}
+              onLeave={() => setHoveredId(null)}
+            />
+            
+            {/* Tags */}
+            <div className="ourwork-tags">
+              {item.links.map((link) => (
+                <Tag 
+                  key={link.id} 
+                  name={link.name} 
+                  isHovered={hoveredId === item.id}
+                />
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
 
-        {/* Projects Grid */}
-        <motion.div
-          layout
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
-            gap: '40px'
-          }}
-        >
-          <AnimatePresence>
-            {filteredProjects.map((project, index) => (
-              <motion.div
-                key={project.id}
-                layout
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.9 }}
-                transition={{ delay: index * 0.1, duration: 0.5 }}
-                style={{
-                  borderRadius: '12px',
-                  overflow: 'hidden',
-                  backgroundColor: 'rgba(0, 0, 0, 0.05)',
-                  border: '1px solid rgba(0, 0, 0, 0.1)',
-                  cursor: 'pointer',
-                  transition: 'all 0.3s ease'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-5px)';
-                  e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.08)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.05)';
-                }}
-                onClick={() => setSelectedProject(selectedProject === project.id ? null : project.id)}
-              >
-                <div style={{
-                  height: '250px',
-                  backgroundColor: 'rgba(0, 0, 0, 0.1)',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  position: 'relative'
-                }}>
-                  <p style={{ color: 'rgba(0, 0, 0, 0.6)' }}>[Project Image]</p>
-                  <div style={{
-                    position: 'absolute',
-                    top: '15px',
-                    right: '15px',
-                    padding: '8px 12px',
-                    backgroundColor: 'rgba(255, 255, 255, 0.7)',
-                    borderRadius: '20px',
-                    fontSize: '0.8rem',
-                    fontWeight: '500'
-                  }}>
-                    {project.category}
-                  </div>
-                </div>
-                
-                <div style={{ padding: '30px' }}>
-                  <h3 style={{
-                    fontSize: '1.4rem',
-                    fontWeight: '600',
-                    margin: '0 0 15px 0'
-                  }}>
-                    {project.title}
-                  </h3>
-                  
-                  <div style={{
-                    display: 'flex',
-                    gap: '20px',
-                    marginBottom: '15px',
-                    fontSize: '0.9rem',
-                    color: 'rgba(0, 0, 0, 0.7)'
-                  }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                      <MapPin size={14} />
-                      {project.location}
-                    </div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                      <Calendar size={14} />
-                      {project.year}
-                    </div>
-                  </div>
-                  
-                  <p style={{
-                    color: 'rgba(0, 0, 0, 0.8)',
-                    lineHeight: 1.6,
-                    margin: 0
-                  }}>
-                    {project.description}
-                  </p>
-                  
-                  <AnimatePresence>
-                    {selectedProject === project.id && (
-                      <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: 'auto' }}
-                        exit={{ opacity: 0, height: 0 }}
-                        transition={{ duration: 0.3 }}
-                        style={{
-                          marginTop: '20px',
-                          paddingTop: '20px',
-                          borderTop: '1px solid rgba(0, 0, 0, 0.1)'
-                        }}
-                      >
-                        <p style={{
-                          color: 'rgba(0, 0, 0, 0.7)',
-                          lineHeight: 1.6,
-                          margin: '0 0 15px 0'
-                        }}>
-                          {project.details}
-                        </p>
-                        <button style={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '8px',
-                          padding: '8px 16px',
-                          backgroundColor: 'transparent',
-                          border: '1px solid rgba(0, 0, 0, 0.3)',
-                          borderRadius: '20px',
-                          color: 'black',
-                          fontSize: '0.9rem',
-                          cursor: 'pointer',
-                          transition: 'all 0.3s ease'
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.1)';
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.backgroundColor = 'transparent';
-                        }}
-                        >
-                          View Full Project
-                          <ExternalLink size={14} />
-                        </button>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              </motion.div>
-            ))}
-          </AnimatePresence>
-        </motion.div>
-      </section>
-
-      <Footer navigateTo={navigateTo} />
-    </div>
+      {/* View All Button */}
+    </section>
   );
 }
