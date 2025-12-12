@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Search, Calendar, ArrowRight, Tag } from 'lucide-react';
+import { Calendar, ArrowRight, Tag } from 'lucide-react';
 import Footer from './Footer';
 import StaggeredMenu from './StaggeredMenu';
 
