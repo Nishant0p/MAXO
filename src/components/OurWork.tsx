@@ -145,10 +145,10 @@ export default function OurWork({ navigateTo: _navigateTo }: OurWorkProps) {
       <StaggeredMenu 
         items={menuItems} 
         position="left"
-        colors={['#f5f5f5', '#e0e0e0', '#d0d0d0']}
+        colors={['#333', '#111', '#000']}
         menuButtonColor="#000"
         openMenuButtonColor="white"
-        accentColor="#666"
+        accentColor="#888"
       />
 
       {/* Header */}

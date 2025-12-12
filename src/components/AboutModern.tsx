@@ -66,7 +66,7 @@ export default function AboutModern({ isMobile }: { isMobile: boolean }) {
     <section ref={containerRef} style={{
       backgroundColor: '#ffffff',
       color: '#000000',
-      padding: isMobile ? '80px 24px' : '128px 96px',
+      padding: isMobile ? '60px 20px' : '128px 96px',
       overflow: 'hidden',
       borderTop: '1px solid rgba(0,0,0,0.05)',
       position: 'relative'
@@ -76,7 +76,7 @@ export default function AboutModern({ isMobile }: { isMobile: boolean }) {
         <div style={{
           display: 'grid',
           gridTemplateColumns: isMobile ? '1fr' : '5fr 7fr',
-          gap: isMobile ? '64px' : '96px',
+          gap: isMobile ? '40px' : '96px',
           alignItems: 'flex-start'
         }}>
           
@@ -132,8 +132,8 @@ export default function AboutModern({ isMobile }: { isMobile: boolean }) {
                viewport={{ once: true }}
                style={{
                  position: 'absolute',
-                 bottom: '-24px',
-                 right: '-24px',
+                 bottom: isMobile ? '0' : '-24px',
+                 right: isMobile ? '0' : '-24px',
                  backgroundColor: '#000',
                  color: '#fff',
                  padding: '16px 32px',
@@ -162,7 +162,7 @@ export default function AboutModern({ isMobile }: { isMobile: boolean }) {
 
                 {/* Headline */}
                 <h2 style={{ 
-                  fontSize: isMobile ? '48px' : '72px', 
+                  fontSize: isMobile ? '40px' : '72px', 
                   fontWeight: 300, 
                   lineHeight: 0.95, 
                   letterSpacing: '-0.025em',
@@ -178,7 +178,7 @@ export default function AboutModern({ isMobile }: { isMobile: boolean }) {
 
                 {/* Description */}
                 <div style={{ 
-                  fontSize: isMobile ? '20px' : '24px', 
+                  fontSize: isMobile ? '16px' : '24px', 
                   lineHeight: 1.6, 
                   color: '#4b5563', 
                   maxWidth: '672px', 
@@ -199,29 +199,39 @@ export default function AboutModern({ isMobile }: { isMobile: boolean }) {
                 {/* Stats Grid */}
                 <motion.div variants={fadeInUpVariant} style={{ 
                   display: 'grid', 
-                  gridTemplateColumns: 'repeat(3, 1fr)', 
-                  gap: '32px', 
+                  gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', 
+                  gap: isMobile ? '24px' : '32px', 
                   borderTop: '1px solid rgba(0,0,0,0.1)', 
-                  paddingTop: '48px', 
+                  paddingTop: isMobile ? '32px' : '48px', 
                   marginTop: '16px' 
                 }}>
                   {/* Stat 1 */}
                   <div>
-                    <h3 style={{ fontSize: isMobile ? '36px' : '60px', fontWeight: 'bold', marginBottom: '8px', display: 'flex', margin: 0 }}>
-                      <AnimatedCounter from={0} to={120} /><span style={{ fontSize: '24px', verticalAlign: 'top', color: '#9ca3af' }}>+</span>
+                    <h3 style={{ fontSize: isMobile ? '32px' : '60px', fontWeight: 'bold', marginBottom: '8px', display: 'flex', margin: 0 }}>
+                      <AnimatedCounter from={0} to={120} /><span style={{ fontSize: isMobile ? '18px' : '24px', verticalAlign: 'top', color: '#9ca3af' }}>+</span>
                     </h3>
                     <p style={{ fontSize: '12px', fontWeight: 'bold', letterSpacing: '0.1em', textTransform: 'uppercase', color: '#6b7280', margin: 0 }}>Projects</p>
                   </div>
                   {/* Stat 2 */}
-                  <div style={{ borderLeft: '1px solid rgba(0,0,0,0.1)', paddingLeft: '32px' }}>
-                    <h3 style={{ fontSize: isMobile ? '36px' : '60px', fontWeight: 'bold', marginBottom: '8px', display: 'flex', margin: 0 }}>
-                      <AnimatedCounter from={0} to={85} /><span style={{ fontSize: '24px', verticalAlign: 'top', color: '#9ca3af' }}>+</span>
+                  <div style={{ 
+                    borderLeft: isMobile ? 'none' : '1px solid rgba(0,0,0,0.1)', 
+                    paddingLeft: isMobile ? '0' : '32px',
+                    borderTop: isMobile ? '1px solid rgba(0,0,0,0.1)' : 'none',
+                    paddingTop: isMobile ? '24px' : '0'
+                  }}>
+                    <h3 style={{ fontSize: isMobile ? '32px' : '60px', fontWeight: 'bold', marginBottom: '8px', display: 'flex', margin: 0 }}>
+                      <AnimatedCounter from={0} to={85} /><span style={{ fontSize: isMobile ? '18px' : '24px', verticalAlign: 'top', color: '#9ca3af' }}>+</span>
                     </h3>
                     <p style={{ fontSize: '12px', fontWeight: 'bold', letterSpacing: '0.1em', textTransform: 'uppercase', color: '#6b7280', margin: 0 }}>Happy Clients</p>
                   </div>
                   {/* Stat 3 */}
-                  <div style={{ borderLeft: '1px solid rgba(0,0,0,0.1)', paddingLeft: '32px' }}>
-                    <h3 style={{ fontSize: isMobile ? '36px' : '60px', fontWeight: 'bold', marginBottom: '8px', display: 'flex', margin: 0 }}>
+                  <div style={{ 
+                    borderLeft: isMobile ? 'none' : '1px solid rgba(0,0,0,0.1)', 
+                    paddingLeft: isMobile ? '0' : '32px',
+                    borderTop: isMobile ? '1px solid rgba(0,0,0,0.1)' : 'none',
+                    paddingTop: isMobile ? '24px' : '0'
+                  }}>
+                    <h3 style={{ fontSize: isMobile ? '32px' : '60px', fontWeight: 'bold', marginBottom: '8px', display: 'flex', margin: 0 }}>
                       <AnimatedCounter from={0} to={42} />
                     </h3>
                     <p style={{ fontSize: '12px', fontWeight: 'bold', letterSpacing: '0.1em', textTransform: 'uppercase', color: '#6b7280', margin: 0 }}>Design Awards</p>

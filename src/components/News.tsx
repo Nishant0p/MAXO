@@ -1,11 +1,19 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, Search, X, Calendar, ArrowRight, Tag } from 'lucide-react';
+import { Search, Calendar, ArrowRight, Tag } from 'lucide-react';
 import Footer from './Footer';
+import StaggeredMenu from './StaggeredMenu';
 
 export default function News({ navigateTo }: { navigateTo: (page: string) => void }) {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('All');
+
+  const menuItems = [
+    { label: 'About', ariaLabel: 'About', link: '/about' },
+    { label: 'Our Work', ariaLabel: 'Our Work', link: '/work' },
+    { label: 'Future Thinking', ariaLabel: 'Future Thinking', link: '/future' },
+    { label: 'News', ariaLabel: 'News', link: '/news' },
+    { label: 'Contact', ariaLabel: 'Contact', link: '/contact' },
+  ];
 
   const newsArticles = [
     {
@@ -81,125 +89,14 @@ export default function News({ navigateTo }: { navigateTo: (page: string) => voi
   return (
     <div style={{ backgroundColor: 'white', color: 'black', minHeight: '100vh' }}>
       {/* Navigation */}
-      <nav style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        zIndex: 50,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        padding: '20px 40px',
-        backgroundColor: 'rgba(255, 255, 255, 0.9)',
-        backdropFilter: 'blur(20px)'
-      }}>
-        <div 
-          style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            gap: '8px', 
-            cursor: 'pointer',
-            zIndex: 60
-          }}
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-        >
-          {isMenuOpen ? <X size={24} style={{ color: 'black' }} /> : <Menu size={24} style={{ color: 'black' }} />}
-          <span style={{ fontSize: '12px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '2px', color: 'black' }}>Menu</span>
-        </div>
-
-        <div style={{ position: 'absolute', left: '50%', transform: 'translateX(-50%)' }}>
-          <button 
-            onClick={() => navigateTo('home')}
-            style={{ background: 'none', border: 'none', cursor: 'pointer' }}
-          >
-            <h1 style={{
-              fontSize: '1.5rem',
-              fontWeight: 900,
-              textTransform: 'uppercase',
-              letterSpacing: '0.1em',
-              margin: 0,
-              color: 'black'
-            }}>
-              MAXO
-            </h1>
-          </button>
-        </div>
-
-        <div style={{ color: 'black' }}>
-          <Search size={24} />
-        </div>
-      </nav>
-
-      {/* Dropdown Menu */}
-      <AnimatePresence>
-        {isMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3, ease: 'easeInOut' }}
-            style={{
-              position: 'fixed',
-              top: '80px',
-              left: '40px',
-              right: '40px',
-              backgroundColor: 'rgba(255, 255, 255, 0.95)',
-              backdropFilter: 'blur(20px)',
-              borderRadius: '12px',
-              padding: '30px',
-              zIndex: 55,
-              border: '1px solid rgba(0, 0, 0, 0.1)'
-            }}
-          >
-            <div style={{ display: 'grid', gap: '20px', maxWidth: '300px' }}>
-              {[
-                { title: 'About Us', page: 'about' },
-                { title: 'Our Work', page: 'work' },
-                { title: 'Future Thinking', page: 'future' },
-                { title: 'News', page: 'news' },
-                { title: 'Contact Us', page: 'contact' }
-              ].map((item, index) => (
-                <motion.button
-                  key={item.title}
-                  onClick={() => {
-                    navigateTo(item.page);
-                    setIsMenuOpen(false);
-                  }}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.1, duration: 0.3 }}
-                  style={{
-                    background: 'none',
-                    border: 'none',
-                    color: 'black',
-                    textDecoration: 'none',
-                    fontSize: '1.5rem',
-                    fontWeight: '300',
-                    letterSpacing: '0.05em',
-                    padding: '10px 0',
-                    borderBottom: index < 4 ? '1px solid rgba(0, 0, 0, 0.1)' : 'none',
-                    transition: 'all 0.3s ease',
-                    cursor: 'pointer',
-                    width: '100%',
-                    textAlign: 'left'
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.color = '#666';
-                    e.currentTarget.style.paddingLeft = '10px';
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.color = 'black';
-                    e.currentTarget.style.paddingLeft = '0';
-                  }}
-                >
-                  {item.title}
-                </motion.button>
-              ))}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <StaggeredMenu 
+        items={menuItems} 
+        position="left"
+        colors={['#333', '#111', '#000']}
+        menuButtonColor="#000"
+        openMenuButtonColor="white"
+        accentColor="#888"
+      />
 
       {/* Hero Section */}
       <motion.section

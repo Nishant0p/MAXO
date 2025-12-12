@@ -11,7 +11,7 @@ import News from './components/News';
 import FutureThinking from './components/FutureThinking';
 import AboutModern from './components/AboutModern';
 import WorkGallery from './components/WorkGallery';
-import NewsSection from './components/NewsSection';
+import DomeGallery from './components/DomeGallery';
 import Footer from './components/Footer';
 
 
@@ -228,8 +228,10 @@ export function MaxoLanding() {
     {/* Third Section: Work Gallery */}
     <WorkGallery isMobile={isMobile} />
 
-    {/* Fourth Section: News Journal */}
-    <NewsSection isMobile={isMobile} />
+    {/* Fourth Section: Dome Gallery */}
+    <div style={{ height: '800px', width: '100%', position: 'relative', overflow: 'hidden', zIndex: 50, backgroundColor: 'black' }}>
+      <DomeGallery />
+    </div>
 
     {/* Fifth Section: Footer */}
     <Footer isMobile={isMobile} />
