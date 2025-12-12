@@ -19,7 +19,7 @@ import Footer from './components/Footer';
 export function MaxoLanding() {
   const [isPreloading, setIsPreloading] = useState(true);
   const videoRef = useRef<HTMLVideoElement | null>(null);
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(() => typeof window !== 'undefined' && window.innerWidth < 768);
   // const location = useLocation();
   // const navigate = useNavigate();
 
@@ -100,7 +100,7 @@ export function MaxoLanding() {
         ref={videoRef}
         muted
         playsInline
-        src="/MAXO_1.mp4" // Vercel/Vite public assets must use root path
+        src={isMobile ? "https://alphas.cdn.prismic.io/alphas/aTxyfXNYClf9oINE_Sky_to_Ground_Video_Generation.mp4" : "/MAXO_1.mp4"}
         style={{
           position: 'fixed',
           top: 0,
