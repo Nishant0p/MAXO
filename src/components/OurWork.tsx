@@ -124,7 +124,11 @@ const ProjectCard = ({
   </motion.div>
 );
 
-export default function OurWork() {
+interface OurWorkProps {
+  navigateTo?: (page: string) => void;
+}
+
+export default function OurWork({ navigateTo: _navigateTo }: OurWorkProps) {
   const [hoveredId, setHoveredId] = useState<number | null>(null);
 
   const menuItems = [
