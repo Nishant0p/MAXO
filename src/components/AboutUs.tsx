@@ -1,285 +1,141 @@
-import { useState, useEffect } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { Users, Target, Award, Heart } from 'lucide-react';
-// import { useNavigate, useLocation } from 'react-router-dom';
-import Footer from './Footer';
+import { useRef, useEffect, useState } from 'react';
+import { motion, useScroll, useTransform, useInView, useMotionValue, animate } from 'framer-motion';
+import { ArrowUpRight, Award, Users, Building, Target } from 'lucide-react';
+import TiltedCard, { Orb } from './TiltedCard';
 import StaggeredMenu from './StaggeredMenu';
+import './AboutUs.css';
 
-// --- CSS Scroll Grid Data & Configuration ---
-const gridItemsData = [
-  'oklch()', 'scroll()', 'text-box-trim', 'pow()', '@property', 'top-layer',
-  '@view-transition', 'var()', 'clamp()', 'view()', 'MAXO', '@layer',
-  '@swash', 'subgrid', 'in oklab', ':popover-open', 'abs()', 'sin()',
-  ':has()', '::marker', '1cap', 'scrollbar-color', 'scroll-timeline',
-  'view-timeline', 'overlay', 'scale', 'ascent-override', 'initial-letter',
-  'inset', '@container', 'accent-color', 'color-mix()', '@scope',
-  '@starting-style', 'override-colors', 'anchor()', 'scroll-snap',
-  '::backdrop', '::cue', ':focus-visible', ':user-valid', ':fullscreen',
-  ':dir()', 'caret-color', 'aspect-ratio', 'cross-fade()', 'image-set()',
-  'env()', 'place-content', 'gap',
-];
+// Easing curves for premium feel
+const transition = { duration: 1.2, ease: [0.33, 1, 0.68, 1] as const };
 
-const itemConfig = [
-  { area: '1/1', range: [0.40, 0.50] },
-  { area: '1/2', range: [0.20, 0.30] },
-  { area: '1/3', range: [0.52, 0.62] },
-  { area: '1/4', range: [0.50, 0.60] },
-  { area: '2/1', range: [0.45, 0.55] },
-  { area: '2/2', range: [0.10, 0.20] },
-  { area: '2/3', range: [0.90, 1.00] },
-  { area: '2/4', range: [0.30, 0.40] },
-  { area: '3/1', range: [0.80, 0.90] },
-  { area: '3/2', range: [0.70, 0.80] },
-  { area: '2 / 2 / 4 / 4', range: [0.00, 0.50] },
-  { area: '3/4', range: [0.52, 0.62] },
-  { area: '4/1', range: [0.15, 0.25] },
-  { area: '4/2', range: [0.07, 0.17] },
-  { area: '4/3', range: [0.75, 0.85] },
-  { area: '4/4', range: [0.03, 0.13] },
-  { area: '2/1', range: [0.87, 0.97] },
-  { area: '2/2', range: [0.42, 0.52] },
-  { area: '2/3', range: [0.57, 0.67] },
-  { area: '2/4', range: [0.37, 0.47] },
-  { area: '3/1', range: [0.12, 0.22] },
-  { area: '3/2', range: [0.08, 0.18] },
-  { area: '3/3', range: [0.84, 0.94] },
-  { area: '3/4', range: [0.33, 0.43] },
-  { area: '1/1', range: [0.48, 0.58] },
-  { area: '1/2', range: [0.13, 0.23] },
-  { area: '1/3', range: [0.78, 0.88] },
-  { area: '1/4', range: [0.62, 0.72] },
-  { area: '4/1', range: [0.31, 0.41] },
-  { area: '4/2', range: [0.08, 0.18] },
-  { area: '4/3', range: [0.04, 0.14] },
-  { area: '4/4', range: [0.74, 0.84] },
-  { area: '2/1', range: [0.61, 0.71] },
-  { area: '2/2', range: [0.26, 0.36] },
-  { area: '2/3', range: [0.63, 0.73] },
-  { area: '2/4', range: [0.11, 0.21] },
-  { area: '3/1', range: [0.89, 0.99] },
-  { area: '3/2', range: [0.33, 0.43] },
-  { area: '3/3', range: [0.88, 0.98] },
-  { area: '3/4', range: [0.22, 0.32] },
-  { area: '1/1', range: [0.16, 0.26] },
-  { area: '1/2', range: [0.26, 0.36] },
-  { area: '1/3', range: [0.66, 0.76] },
-  { area: '1/4', range: [0.03, 0.13] },
-  { area: '4/1', range: [0.44, 0.54] },
-  { area: '4/2', range: [0.11, 0.21] },
-  { area: '4/3', range: [0.23, 0.33] },
-  { area: '4/4', range: [0.39, 0.49] },
-  { area: '3/1', range: [0.59, 0.69] },
-  { area: '3/2', range: [0.06, 0.16] },
-];
-
-// --- Grid Item Component ---
-interface GridItemProps {
-  text: string;
-  area: string;
-  scrollYProgress: any;
-  range: number[];
-}
-
-const GridItem = ({ text, area, scrollYProgress, range }: GridItemProps) => {
-  const isSpecial = text === 'MAXO';
-
-  const itemProgress = useTransform(
-    scrollYProgress,
-    range,
-    [0, 1],
-    { clamp: true }
-  );
-
-  const z = useTransform(itemProgress, [0, 0.5, 1], [-1000, 0, 1000]);
-  const opacity = useTransform(itemProgress, [0, 0.5, 1], [0, 1, 0]);
-  const blur = useTransform(itemProgress, [0, 0.5, 1], [5, 0, 5]);
-
-  const transform = useTransform(z, (zVal) => `translateZ(${zVal}px)`);
-  const filter = useTransform(blur, (b) => `blur(${b}px)`);
-
-  return (
-    <motion.div
-      style={{
-        gridArea: area,
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        position: 'relative',
-        fontSize: isSpecial ? '15vmin' : '5vmin',
-        fontWeight: isSpecial ? 'bold' : 'lighter',
-        whiteSpace: 'nowrap',
-        willChange: 'transform, opacity, filter',
-        color: 'white',
-        transform,
-        opacity,
-        filter,
-      }}
-    >
-      {isSpecial ? <b>{text}</b> : text}
-    </motion.div>
-  );
+// Animation variants
+const fadeInUp = {
+  hidden: { opacity: 0, y: 60 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" as const } }
 };
 
-// --- CSS Scroll Grid Component ---
-const CSSScrollGrid = () => {
-  const { scrollYProgress } = useScroll();
-
-  const stuckGridStyle: React.CSSProperties = {
-    height: '100vh',
-    perspective: '1000px',
-    display: 'grid',
-    gridTemplateRows: 'repeat(4, 25vh)',
-    gridTemplateColumns: 'repeat(4, 25vw)',
-    placeItems: 'center',
-    position: 'sticky',
-    top: 0,
-    overflow: 'clip',
-    zIndex: 5,
-    background: 'linear-gradient(135deg, rgba(0,0,0,0.95) 0%, rgba(20,20,20,0.95) 100%)',
-  };
-
-  const itemsToRender = gridItemsData.map((text, index) => {
-    const config = itemConfig[index];
-    if (text === 'MAXO') return null;
-
-    return (
-      <GridItem
-        key={index}
-        text={text}
-        area={config.area}
-        scrollYProgress={scrollYProgress}
-        range={config.range}
-      />
-    );
-  }).filter(Boolean);
-
-  const specialMAXOItem = (
-    <GridItem
-      key="special-maxo"
-      text="MAXO"
-      area="2 / 2 / 4 / 4"
-      scrollYProgress={scrollYProgress}
-      range={itemConfig.find(c => c.area === '2 / 2 / 4 / 4')?.range || [0.00, 0.50]}
-    />
-  );
-
-  return (
-    <motion.div style={stuckGridStyle}>
-      {itemsToRender}
-      {specialMAXOItem}
-    </motion.div>
-  );
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.15, delayChildren: 0.2 }
+  }
 };
 
-// --- Typewriter Effect Component for MAXO text ---
-const TypewriterMAXO = ({ delay = 0 }: { delay?: number }) => {
-  const [displayText, setDisplayText] = useState('');
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const text = 'MAXO';
+const maskReveal = {
+  hidden: { y: "110%", opacity: 0 },
+  visible: { y: "0%", opacity: 1, transition }
+};
+
+const lineReveal = {
+  hidden: { scaleX: 0, originX: 0 },
+  visible: { scaleX: 1, transition: { duration: 1.2, ease: [0.77, 0, 0.175, 1] as const } }
+};
+
+// Animated counter component
+const AnimatedCounter = ({ from, to, suffix = "" }: { from: number; to: number; suffix?: string }) => {
+  const count = useMotionValue(from);
+  const rounded = useTransform(count, (latest) => Math.round(latest));
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const [displayValue, setDisplayValue] = useState(from);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      if (currentIndex < text.length) {
-        setDisplayText(text.slice(0, currentIndex + 1));
-        setCurrentIndex(currentIndex + 1);
-      }
-    }, delay + (currentIndex * 100));
+    if (isInView) {
+      const controls = animate(count, to, { duration: 2.5, ease: "easeOut" });
+      return controls.stop;
+    }
+  }, [isInView, count, to]);
 
-    return () => clearTimeout(timer);
-  }, [currentIndex, delay]);
+  useEffect(() => {
+    rounded.on("change", (v) => setDisplayValue(v));
+  }, [rounded]);
 
-  return (
-    <span style={{ fontWeight: 'bold', color: 'black' }}>
-      {displayText}
-      {currentIndex < text.length && (
-        <span style={{ 
-          animation: 'blink 1s infinite',
-          marginLeft: '2px',
-          color: 'black'
-        }}>|</span>
-      )}
-    </span>
-  );
+  return <span ref={ref}>{displayValue}{suffix}</span>;
 };
 
-// --- Main About Us Component ---
 export default function AboutUs() {
-  // const navigate = useNavigate();
-  // const location = useLocation();
-  // const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const containerRef = useRef(null);
+  const heroRef = useRef(null);
+  const storyRef = useRef(null);
+  const statsRef = useRef(null);
+  const [isTablet, setIsTablet] = useState(false);
 
-  // useEffect(() => {
-  //   setIsMenuOpen(false);
-  // }, [location]);
+  useEffect(() => {
+    const checkDevice = () => {
+      const width = window.innerWidth;
+      setIsTablet(width >= 768 && width < 1024);
+    };
+    checkDevice();
+    window.addEventListener('resize', checkDevice);
+    return () => window.removeEventListener('resize', checkDevice);
+  }, []);
+
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start end", "end start"]
+  });
+
+  const { scrollYProgress: heroProgress } = useScroll({
+    target: heroRef,
+    offset: ["start start", "end start"]
+  });
+
+  const { scrollYProgress: storyProgress } = useScroll({
+    target: storyRef,
+    offset: ["start end", "end start"]
+  });
+
+  const { scrollYProgress: statsProgress } = useScroll({
+    target: statsRef,
+    offset: ["start end", "end start"]
+  });
+
+  const heroOpacity = useTransform(heroProgress, [0, 0.8], [1, 0]);
+  const heroScale = useTransform(heroProgress, [0, 0.8], [1, 1.1]);
+  const heroTextY = useTransform(heroProgress, [0, 0.8], [0, 100]);
+  
+  // Keep scroll progress refs for potential future animations
+  void scrollYProgress;
+  void storyProgress;
+  void statsProgress;
+
+  const stats = [
+    { number: 25, suffix: "+", label: "Years Experience", icon: Award },
+    { number: 500, suffix: "+", label: "Projects Completed", icon: Building },
+    { number: 120, suffix: "+", label: "Team Members", icon: Users },
+    { number: 15, suffix: "", label: "Countries Served", icon: Target }
+  ];
 
   const values = [
     {
-      icon: Users,
-      title: 'Collaboration',
-      description: 'We believe in the power of teamwork and collaborative design processes that bring out the best in every project.'
+      title: "Innovation",
+      description: "Pushing boundaries with cutting-edge design solutions that redefine architectural possibilities."
     },
     {
-      icon: Target,
-      title: 'Innovation',
-      description: 'Pushing boundaries and exploring new possibilities in design to create unique and impactful solutions.'
+      title: "Sustainability",
+      description: "Creating environmentally conscious spaces that harmonize with nature and reduce ecological footprint."
     },
     {
-      icon: Award,
-      title: 'Excellence',
-      description: 'Committed to delivering the highest quality work that exceeds expectations and stands the test of time.'
-    },
-    {
-      icon: Heart,
-      title: 'Passion',
-      description: 'Every project is approached with genuine enthusiasm and dedication to creating meaningful design experiences.'
+      title: "Excellence",
+      description: "Delivering exceptional quality in every project through meticulous attention to detail."
     }
   ];
 
-  const team = [
-    {
-      name: 'Sarah Johnson',
-      role: 'Creative Director',
-      image: '/team-1.jpg',
-      bio: 'With over 15 years of experience in design, Sarah leads our creative vision.'
-    },
-    {
-      name: 'Michael Chen',
-      role: 'Lead Architect',
-      image: '/team-2.jpg',
-      bio: 'Michael brings innovative architectural solutions to every project.'
-    },
-    {
-      name: 'Emily Rodriguez',
-      role: 'Interior Designer',
-      image: '/team-3.jpg',
-      bio: 'Emily specializes in creating beautiful and functional interior spaces.'
-    }
+  const menuItems = [
+    { label: 'About', ariaLabel: 'About', link: '/about' },
+    { label: 'Our Work', ariaLabel: 'Our Work', link: '/work' },
+    { label: 'Future Thinking', ariaLabel: 'Future Thinking', link: '/future' },
+    { label: 'News', ariaLabel: 'News', link: '/news' },
+    { label: 'Contact', ariaLabel: 'Contact', link: '/contact' },
   ];
 
   return (
-    <div style={{ backgroundColor: 'white', color: 'black', minHeight: '100vh' }}>
-      {/* Add CSS for blinking cursor animation */}
-      <style>
-        {`
-          @keyframes blink {
-            0%, 50% { opacity: 1; }
-            51%, 100% { opacity: 0; }
-          }
-          html {
-            scroll-behavior: smooth;
-          }
-        `}
-      </style>
-
-      {/* Navigation */}
+    <div ref={containerRef} className="about-container">
+      
+      {/* Navigation Menu */}
       <StaggeredMenu 
-        items={[
-          { label: 'About', ariaLabel: 'About', link: '/about' },
-          { label: 'Our Work', ariaLabel: 'Our Work', link: '/work' },
-          { label: 'Future Thinking', ariaLabel: 'Future Thinking', link: '/future' },
-          { label: 'News', ariaLabel: 'News', link: '/news' },
-          { label: 'Contact', ariaLabel: 'Contact', link: '/contact' },
-        ]} 
+        items={menuItems} 
         position="left"
         colors={['#333', '#111', '#000']}
         menuButtonColor="white"
@@ -287,324 +143,260 @@ export default function AboutUs() {
         accentColor="#888"
       />
 
-      {/* CSS Scroll Grid Hero Section */}
-      <CSSScrollGrid />
+      {/* Hero Section */}
+      <section ref={heroRef} className="about-hero">
+        {/* Orb Background */}
+        <motion.div
+          className="about-hero-bg"
+          style={{ scale: heroScale, opacity: heroOpacity }}
+        >
+          <Orb hue={220} hoverIntensity={0.3} rotateOnHover={true} forceHoverState={false} />
+        </motion.div>
 
-      {/* Spacer to allow scroll animation to complete */}
-      <div style={{ height: '300vh', background: 'white' }} />
+        {/* Gradient Overlay */}
+        <div className="about-hero-gradient" />
 
-      {/* All Page Content - Shows after scroll animation completes */}
-      <div style={{ position: 'relative', zIndex: 10, background: 'white' }}>
-        
-        {/* About Content Section - Shows after scroll grid */}
-        <motion.section
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ duration: 1 }}
-        style={{
-          padding: '120px 40px 80px',
-          background: 'linear-gradient(135deg, rgba(245,245,245,0.9) 0%, rgba(230,230,230,0.9) 100%)',
-          minHeight: '100vh',
-          display: 'flex',
-          alignItems: 'center'
-        }}
-      >
-        <div style={{
-          maxWidth: '1200px',
-          margin: '0 auto',
-          display: 'grid',
-          gridTemplateColumns: '1fr 1fr',
-          gap: '60px',
-          alignItems: 'center',
-          width: '100%'
-        }}>
-          <div style={{ textAlign: 'left' }}>
-            <motion.h1
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2, duration: 0.8 }}
-              style={{
-                fontSize: '4rem',
-                fontWeight: 300,
-                lineHeight: 1.1,
-                margin: '0 0 30px 0',
-                color: 'black'
-              }}
-            >
-              About <TypewriterMAXO delay={200} />
+        {/* Hero Content */}
+        <motion.div
+          variants={staggerContainer}
+          initial="hidden"
+          animate="visible"
+          className="about-hero-content"
+          style={{ y: heroTextY }}
+        >
+          {/* Scroll indicator */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 2, duration: 1 }}
+            className="about-scroll-indicator"
+          >
+            <motion.div
+              animate={{ y: [0, 10, 0] }}
+              transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
+              className="about-scroll-line"
+            />
+            <span className="about-scroll-text">Scroll</span>
+          </motion.div>
+          
+          <motion.p variants={fadeInUp} className="about-hero-subtitle">
+           <h3>About MAXO</h3>
+          </motion.p>
+
+          <div className="about-hero-title-wrapper">
+            <motion.h1 variants={maskReveal} className="about-hero-title">
+              Crafting Spaces
             </motion.h1>
-            <motion.p
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.4, duration: 0.8 }}
-              style={{
-                fontSize: '1.2rem',
-                color: 'rgba(0, 0, 0, 0.8)',
-                lineHeight: 1.6,
-                margin: '0 0 25px 0'
-              }}
-            >
-              We are a creative design studio at <TypewriterMAXO delay={800} /> passionate about transforming spaces and creating 
-              meaningful experiences through innovative design solutions.
-            </motion.p>
-            <motion.p
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.6, duration: 0.8 }}
-              style={{
-                fontSize: '1.1rem',
-                color: 'rgba(0, 0, 0, 0.7)',
-                lineHeight: 1.6,
-                margin: 0
-              }}
-            >
-              Our team at <TypewriterMAXO delay={1200} /> combines creativity with functionality to deliver exceptional design 
-              experiences that inspire and elevate every project we undertake.
-            </motion.p>
           </div>
 
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.8, duration: 0.8 }}
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center'
-            }}
-          >
-            <div style={{
-              width: '100%',
-              maxWidth: '500px',
-              height: '400px',
-              borderRadius: '12px',
-              overflow: 'hidden',
-              backgroundColor: 'rgba(0, 0, 0, 0.1)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}>
-              <img 
-                src="https://media1.tenor.com/m/GLMgQt-oMSEAAAAd/teach-me-how-to-dougie.gif"
-                alt="MAXO Creative Studio"
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover'
-                }}
-                onError={(e) => {
-                  e.currentTarget.src = "https://via.placeholder.com/500x400/333333/ffffff?text=MAXO+Studio";
-                }}
-              />
-            </div>
-          </motion.div>
-        </div>
-      </motion.section>
+          <div className="about-hero-title-wrapper">
+            <motion.h1 variants={maskReveal} className="about-hero-title">
+              That <span style={{ fontStyle: 'italic', fontWeight: 400 }}>Inspire</span>
+            </motion.h1>
+          </div>
+
+          <motion.p variants={fadeInUp} className="about-hero-description">
+            We are a team of passionate architects and designers dedicated to 
+            transforming visions into extraordinary built environments.
+          </motion.p>
+        </motion.div>
+      </section>
 
       {/* Story Section */}
-      <section style={{ padding: '80px 40px', maxWidth: '1200px', margin: '0 auto' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '60px', alignItems: 'center' }}>
+      <section ref={storyRef} className="about-story">
+        <div className="about-story-container">
+          {/* Image */}
           <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.2, duration: 0.8 }}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="about-story-image-wrapper"
           >
-            <h2 style={{
-              fontSize: '2.5rem',
-              fontWeight: 300,
-              margin: '0 0 30px 0',
-              color: 'black'
-            }}>
-              Our <span style={{ fontWeight: 'bold' }}>Story</span>
-            </h2>
-            <p style={{
-              fontSize: '1.1rem',
-              lineHeight: 1.7,
-              color: 'rgba(0, 0, 0, 0.8)',
-              margin: '0 0 25px 0'
-            }}>
-              Founded in 2015, MAXO began as a small team of passionate designers with a vision 
-              to create spaces that inspire and elevate the human experience. What started as a 
-              local studio has grown into a recognized name in the design industry.
-            </p>
-            <p style={{
-              fontSize: '1.1rem',
-              lineHeight: 1.7,
-              color: 'rgba(0, 0, 0, 0.8)',
-              margin: 0
-            }}>
-              Today, we continue to push boundaries, explore new possibilities, and create 
-              designs that not only look beautiful but also function seamlessly in the real world.
-            </p>
+            <img
+              src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=2653&auto=format&fit=crop"
+              alt="Architecture Design"
+              className="about-story-image"
+            />
           </motion.div>
+
+          {/* Text */}
           <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.4, duration: 0.8 }}
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
             viewport={{ once: true }}
-            style={{
-              height: '400px',
-              backgroundColor: 'rgba(0, 0, 0, 0.1)',
-              borderRadius: '12px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}
+            className="about-story-text"
           >
-            <p style={{ color: 'rgba(0, 0, 0, 0.6)' }}>[Studio Image Placeholder]</p>
+            <motion.p variants={fadeInUp} className="about-section-label">
+              Our Story
+            </motion.p>
+
+            <motion.div style={{ overflow: 'hidden', marginBottom: '32px' }}>
+              <motion.h2 variants={fadeInUp} className="about-story-title">
+                Redefining Architecture
+                <br />
+                <span style={{ fontStyle: 'italic' }}>Since 1999</span>
+              </motion.h2>
+            </motion.div>
+            
+            <motion.div variants={lineReveal} className="about-story-line" />
+
+            <motion.p variants={fadeInUp} className="about-story-paragraph">
+              Founded with a vision to create meaningful spaces, MAXO has grown from a 
+              small studio into an internationally recognized architectural practice. 
+              Our journey has been defined by a relentless pursuit of design excellence 
+              and innovation.
+            </motion.p>
+
+            <motion.p variants={fadeInUp} className="about-story-paragraph">
+              We believe architecture has the power to transform lives. Every project 
+              we undertake is an opportunity to create spaces that inspire, function 
+              beautifully, and stand the test of time.
+            </motion.p>
+
+            <motion.a href="/work" whileHover={{ x: 8 }} className="about-story-link">
+              View Our Work
+              <ArrowUpRight size={16} />
+            </motion.a>
           </motion.div>
         </div>
+      </section>
+
+      {/* Stats Section */}
+      <section ref={statsRef} className="about-stats">
+        <motion.div className="about-stats-container">
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="about-stats-header"
+          >
+            <h2 className="about-stats-title">
+              Numbers That <span style={{ fontStyle: 'italic' }}>Define Us</span>
+            </h2>
+          </motion.div>
+
+          <div className="about-stats-grid">
+            {stats.map((stat, index) => (
+              <motion.div
+                key={stat.label}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                className="about-stat-item"
+              >
+                <stat.icon size={24} className="about-stat-icon" />
+                <div className="about-stat-number">
+                  <AnimatedCounter from={0} to={stat.number} suffix={stat.suffix} />
+                </div>
+                <p className="about-stat-label">{stat.label}</p>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
       </section>
 
       {/* Values Section */}
-      <section style={{ padding: '80px 40px', backgroundColor: 'rgba(0, 0, 0, 0.05)' }}>
-        <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-          <motion.h2
-            initial={{ opacity: 0, y: 30 }}
+      <section className="about-values">
+        <div className="about-values-container">
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            style={{
-              fontSize: '2.5rem',
-              fontWeight: 300,
-              textAlign: 'center',
-              margin: '0 0 60px 0',
-              color: 'black'
-            }}
+            className="about-values-header"
           >
-            Our <span style={{ fontWeight: 'bold' }}>Values</span>
-          </motion.h2>
-          <div style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
-            gap: '40px'
-          }}>
-            {values.map((value, index) => {
-              const IconComponent = value.icon;
-              return (
+            {/* Title */}
+            <div>
+              <p className="about-section-label">Our Values</p>
+              <h2 className="about-values-title">
+                What Drives <span style={{ fontStyle: 'italic' }}>Our Vision</span>
+              </h2>
+            </div>
+
+            {/* Values Grid */}
+            <div className="about-values-grid">
+              {values.map((value, index) => (
                 <motion.div
                   key={value.title}
-                  initial={{ opacity: 0, y: 50 }}
+                  initial={{ opacity: 0, y: 40 }}
                   whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1, duration: 0.8 }}
                   viewport={{ once: true }}
-                  style={{
-                    padding: '30px',
-                    borderRadius: '12px',
-                    backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                    border: '1px solid rgba(255, 255, 255, 0.1)',
-                    textAlign: 'center'
-                  }}
+                  transition={{ duration: 0.6, delay: index * 0.15 }}
+                  className="about-value-item"
                 >
-                  <div style={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    marginBottom: '20px'
-                  }}>
-                    <IconComponent size={48} style={{ color: 'rgba(255, 255, 255, 0.8)' }} />
-                  </div>
-                  <h3 style={{
-                    fontSize: '1.3rem',
-                    fontWeight: 600,
-                    margin: '0 0 15px 0',
-                    color: 'white'
-                  }}>
-                    {value.title}
-                  </h3>
-                  <p style={{
-                    color: 'rgba(255, 255, 255, 0.7)',
-                    lineHeight: 1.6,
-                    margin: 0
-                  }}>
-                    {value.description}
-                  </p>
+                  <h3 className="about-value-title">{value.title}</h3>
+                  <p className="about-value-description">{value.description}</p>
                 </motion.div>
-              );
-            })}
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Team Preview Section */}
+      <section className="about-team">
+        <div className="about-team-container">
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="about-team-header"
+          >
+            <p className="about-section-label">Leadership</p>
+            <h2 className="about-team-title">
+              Meet Our <span style={{ fontStyle: 'italic' }}>Team</span>
+            </h2>
+          </motion.div>
+
+          <div className="about-team-grid">
+            {[
+              { name: "Alexander Chen", role: "Founder & Principal", image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1000&auto=format&fit=crop" },
+              { name: "Sarah Mitchell", role: "Design Director", image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1000&auto=format&fit=crop" },
+              { name: "Marcus Williams", role: "Technical Director", image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=1000&auto=format&fit=crop" }
+            ].map((member, index) => (
+              <motion.div
+                key={member.name}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: index * 0.15 }}
+                className="about-team-member"
+              >
+                {/* Mobile Image */}
+                <div className="about-team-image-mobile">
+                  <img src={member.image} alt={member.name} />
+                </div>
+                
+                {/* Desktop TiltedCard */}
+                <div className="about-team-image-desktop">
+                  <TiltedCard
+                    imageSrc={member.image}
+                    altText={member.name}
+                    captionText={member.role}
+                    containerHeight={isTablet ? '320px' : '380px'}
+                    containerWidth="100%"
+                    imageHeight={isTablet ? '300px' : '350px'}
+                    imageWidth={isTablet ? '240px' : '280px'}
+                    scaleOnHover={1.05}
+                    rotateAmplitude={12}
+                    showMobileWarning={false}
+                    showTooltip={true}
+                  />
+                </div>
+                
+                <h3 className="about-team-name">{member.name}</h3>
+                <p className="about-team-role">{member.role}</p>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Team Section */}
-      <section style={{ padding: '80px 40px', maxWidth: '1200px', margin: '0 auto' }}>
-        <motion.h2
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          style={{
-            fontSize: '2.5rem',
-            fontWeight: 300,
-            textAlign: 'center',
-            margin: '0 0 60px 0',
-            color: 'white'
-          }}
-        >
-          Meet Our <span style={{ fontWeight: 'bold' }}>Team</span>
-        </motion.h2>
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-          gap: '40px'
-        }}>
-          {team.map((member, index) => (
-            <motion.div
-              key={member.name}
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1, duration: 0.8 }}
-              viewport={{ once: true }}
-              style={{
-                textAlign: 'center'
-              }}
-            >
-              <div style={{
-                width: '200px',
-                height: '200px',
-                borderRadius: '50%',
-                backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                margin: '0 auto 20px',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center'
-              }}>
-                <p style={{ color: 'rgba(255, 255, 255, 0.6)' }}>[Photo]</p>
-              </div>
-              <h3 style={{
-                fontSize: '1.3rem',
-                fontWeight: 600,
-                margin: '0 0 10px 0',
-                color: 'white'
-              }}>
-                {member.name}
-              </h3>
-              <p style={{
-                color: 'rgba(255, 255, 255, 0.6)',
-                fontSize: '1rem',
-                margin: '0 0 15px 0'
-              }}>
-                {member.role}
-              </p>
-              <p style={{
-                color: 'rgba(255, 255, 255, 0.7)',
-                lineHeight: 1.6,
-                margin: 0
-              }}>
-                {member.bio}
-              </p>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
-        <Footer />
-      </div>
+      {/* Footer */}
+      
     </div>
   );
 }
