@@ -11,12 +11,14 @@
 /* Hero Section */
 .about-hero {
   position: relative;
+  z-index: 2;
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
   padding: 160px 80px;
+  background-color: #0a0a0a;
 }
 
 .about-hero-bg {
@@ -117,6 +119,8 @@
 
 /* Story Section */
 .about-story {
+  position: relative;
+  z-index: 2;
   padding: 140px 80px;
   background-color: #fff;
   color: #000;
@@ -192,54 +196,70 @@
 }
 
 /* Stats Section */
+.about-stats-wrapper {
+  position: relative;
+  height: 100vh;
+}
+
 .about-stats {
-  padding: 120px 80px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 40px 40px;
   background-color: #111;
   color: #fff;
   overflow: hidden;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 0;
 }
 
 .about-stats-container {
-  max-width: 1400px;
+  max-width: 1000px;
   margin: 0 auto;
+  width: 100%;
 }
 
 .about-stats-header {
   text-align: center;
-  margin-bottom: 80px;
+  margin-bottom: 40px;
 }
 
 .about-stats-title {
-  font-size: 42px;
+  font-size: 36px;
   font-weight: 300;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 
 .about-stats-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 48px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32px;
 }
 
 .about-stat-item {
   text-align: center;
-  padding: 24px;
+  padding: 16px;
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .about-stat-icon {
   color: rgba(255, 255, 255, 0.4);
-  margin-bottom: 20px;
-}
-
-.about-stat-number {
-  font-size: 56px;
-  font-weight: 200;
   margin-bottom: 12px;
 }
 
+.about-stat-number {
+  font-size: 42px;
+  font-weight: 200;
+  margin-bottom: 8px;
+}
+
 .about-stat-label {
-  font-size: 13px;
+  font-size: 11px;
   letter-spacing: 2px;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.6);
@@ -249,6 +269,8 @@
 
 /* Values Section */
 .about-values {
+  position: relative;
+  z-index: 2;
   padding: 140px 80px;
   background-color: #f8f8f8;
   color: #000;
@@ -301,6 +323,8 @@
 
 /* Team Section */
 .about-team {
+  position: relative;
+  z-index: 2;
   padding: 140px 80px;
   background-color: #fff;
   color: #000;

@@ -95,6 +95,9 @@ export default function AboutUs() {
   const heroScale = useTransform(heroProgress, [0, 0.8], [1, 1.1]);
   const heroTextY = useTransform(heroProgress, [0, 0.8], [0, 100]);
   
+  // Stats section: always visible (opacity controlled by z-index layering)
+  // Remove opacity transform - let CSS z-index handle visibility
+  
   // Keep scroll progress refs for potential future animations
   void scrollYProgress;
   void storyProgress;
@@ -264,15 +267,16 @@ export default function AboutUs() {
       </section>
 
       {/* Stats Section */}
-      <section ref={statsRef} className="about-stats">
-        <motion.div className="about-stats-container">
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="about-stats-header"
-          >
+      <div className="about-stats-wrapper">
+        <section ref={statsRef} className="about-stats">
+          <motion.div className="about-stats-container">
+            <motion.div
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="about-stats-header"
+            >
             <h2 className="about-stats-title">
               Numbers That <span style={{ fontStyle: 'italic' }}>Define Us</span>
             </h2>
@@ -288,7 +292,7 @@ export default function AboutUs() {
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 className="about-stat-item"
               >
-                <stat.icon size={24} className="about-stat-icon" />
+                <stat.icon size={20} className="about-stat-icon" />
                 <div className="about-stat-number">
                   <AnimatedCounter from={0} to={stat.number} suffix={stat.suffix} />
                 </div>
@@ -297,7 +301,8 @@ export default function AboutUs() {
             ))}
           </div>
         </motion.div>
-      </section>
+        </section>
+      </div>
 
       {/* Values Section */}
       <section className="about-values">
