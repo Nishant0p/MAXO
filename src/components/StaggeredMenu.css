@@ -42,7 +42,7 @@
   width: 100%;
   padding: 20px 40px;
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
   align-items: center;
   z-index: 110;
   pointer-events: none; /* Let clicks pass through to page content */
@@ -63,8 +63,6 @@
 }
 
 .sm-toggle {
-  background: none;
-  border: none;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -75,7 +73,72 @@
   letter-spacing: 1px;
   color: white;
   z-index: 120;
-  mix-blend-mode: difference;
+  /* mix-blend-mode: difference; Removed to allow glass effect color */
+}
+
+.liquid-glass-btn {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  border-radius: 30px;
+  padding: 10px 20px;
+  transition: all 0.3s ease;
+}
+
+.liquid-glass-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 6px 40px rgba(0, 0, 0, 0.2);
+}
+
+.sm-social-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  z-index: 120;
+}
+
+.sm-social-btn {
+  padding: 0;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+}
+
+.liquid-glass-panel {
+  position: absolute;
+  right: 60px; /* To the left of the button */
+  top: 0;
+  display: flex;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  border-radius: 30px;
+  padding: 6px 12px;
+  align-items: center;
+  height: 44px;
+  box-sizing: border-box;
+}
+
+.sm-social-icon {
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px;
+  border-radius: 50%;
+  transition: background 0.2s;
+}
+
+.sm-social-icon:hover {
+  background: rgba(255, 255, 255, 0.2);
 }
 
 .sm-toggle-textWrap {
@@ -223,6 +286,22 @@
 @media (max-width: 768px) {
   .staggered-menu-header {
     padding: 15px 20px;
+  }
+  
+  .sm-logo {
+    position: static;
+    transform: none;
+    order: -1;
+    margin-right: auto;
+  }
+
+  .sm-toggle {
+    order: 2;
+  }
+
+  .sm-social-wrapper {
+    order: 1;
+    margin-right: 10px;
   }
   
   .sm-panel-item {

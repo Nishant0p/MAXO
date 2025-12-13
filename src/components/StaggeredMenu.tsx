@@ -1,6 +1,7 @@
 import React, { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Instagram, Youtube, MessageCircle, Share2 } from 'lucide-react';
 import './StaggeredMenu.css';
 
 export interface StaggeredMenuItem {
@@ -51,6 +52,7 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
   onMenuClose
 }: StaggeredMenuProps) => {
   const [open, setOpen] = useState(false);
+  const [socialOpen, setSocialOpen] = useState(false);
   const openRef = useRef(false);
   const panelRef = useRef<HTMLDivElement | null>(null);
   const preLayersRef = useRef<HTMLDivElement | null>(null);
@@ -385,7 +387,7 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
       <header className="staggered-menu-header" aria-label="Main navigation header">
         <button
           ref={toggleBtnRef}
-          className="sm-toggle"
+          className="sm-toggle liquid-glass-btn"
           aria-label={open ? 'Close menu' : 'Open menu'}
           aria-expanded={open}
           aria-controls="staggered-menu-panel"
@@ -422,6 +424,32 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
           >
               MAXO
           </motion.h1>
+        </div>
+
+        <div className="sm-social-wrapper">
+            <AnimatePresence>
+                {socialOpen && (
+                    <motion.div 
+                        className="sm-social-expanded liquid-glass-panel"
+                        initial={{ opacity: 0, x: 20, scale: 0.9 }}
+                        animate={{ opacity: 1, x: 0, scale: 1 }}
+                        exit={{ opacity: 0, x: 20, scale: 0.9 }}
+                        transition={{ duration: 0.3 }}
+                    >
+                        <a href="https://instagram.com" target="_blank" rel="noreferrer" className="sm-social-icon"><Instagram size={20} /></a>
+                        <a href="https://youtube.com" target="_blank" rel="noreferrer" className="sm-social-icon"><Youtube size={20} /></a>
+                        <a href="https://whatsapp.com" target="_blank" rel="noreferrer" className="sm-social-icon"><MessageCircle size={20} /></a>
+                        <a href="#" className="sm-social-icon"><Share2 size={20} /></a>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+            <button 
+                className="sm-toggle liquid-glass-btn sm-social-btn" 
+                onClick={() => setSocialOpen(!socialOpen)}
+                style={{ color: menuButtonColor }}
+            >
+                <Share2 size={20} />
+            </button>
         </div>
       </header>
 
