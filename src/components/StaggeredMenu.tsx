@@ -410,20 +410,22 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
         </button>
 
         <div className="sm-logo" aria-label="Logo">
-          <motion.h1
-            layoutId="brand-logo"
-            transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1] }}
-            style={{
-              fontSize: '1.5rem',
-              fontWeight: 900,
-              textTransform: 'uppercase',
-              letterSpacing: '0.1em',
-              margin: 0,
-              color: menuButtonColor
-            }}
-          >
-              MAXO
-          </motion.h1>
+          <a href="/" style={{ textDecoration: 'none', color: 'inherit', display: 'block' }}>
+            <motion.h1
+              layoutId="brand-logo"
+              transition={{ duration: 1.2, ease: [0.76, 0, 0.24, 1] }}
+              style={{
+                fontSize: '1.5rem',
+                fontWeight: 900,
+                textTransform: 'uppercase',
+                letterSpacing: '0.1em',
+                margin: 0,
+                color: menuButtonColor
+              }}
+            >
+                MAXO
+            </motion.h1>
+          </a>
         </div>
 
         <div className="sm-social-wrapper">
