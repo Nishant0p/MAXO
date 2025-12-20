@@ -3,44 +3,64 @@ import './projects.css';
 
 const CommercialArchitecture = () => {
   const navigate = useNavigate();
-  const content = [
-    { title: "Corporate Office Spaces", text: "Modern commercial buildings designed for business excellence and innovation.", img: "https://images.unsplash.com/photo-1486325212027-8081e485255e?w=600&h=400&fit=crop" },
-    { title: "Retail & Shopping Centers", text: "Dynamic retail environments that blend aesthetics with functionality for optimal customer experience.", img: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=600&h=400&fit=crop" },
-    { title: "Business Hubs", text: "Contemporary commercial complexes fostering collaboration and entrepreneurial growth.", img: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=600&h=400&fit=crop" },
+
+  const projectItem = [
+    { id: 1, title: "Corporate Office Spaces", slug: "corporate-offices", links: [{ id: 1 }, { id: 2 }], image: "https://images.unsplash.com/photo-1486325212027-8081e485255e?w=600&h=400&fit=crop" },
+    { id: 2, title: "Retail & Shopping Centers", slug: "retail-shopping", links: [{ id: 1 }, { id: 2 }], image: "https://images.unsplash.com/photo-1567521464027-f127ff144326?w=600&h=400&fit=crop" },
+    { id: 3, title: "Business Hubs", slug: "business-hubs", links: [{ id: 1 }, { id: 2 }], image: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&h=400&fit=crop" },
+    { id: 4, title: "Modern Offices", slug: "modern-offices", links: [{ id: 1 }, { id: 2 }], image: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=600&h=400&fit=crop" },
   ];
 
+  const handleImageClick = (item: typeof projectItem[0]) => {
+    navigate('/allproject', { 
+      state: { 
+        project: { 
+          ...item, 
+          category: 'Commercial Architecture'
+        } 
+      } 
+    });
+  };
+
   return (
-    <div className="project-container">
-      <div className="project-wrapper">
-        <button 
-          onClick={() => navigate(-1)} 
-          className="back-button"
-        >
-          ← Back
-        </button>
-        <h1 className="project-title">Commercial Architecture</h1>
+    <div className="project-page">
+      <button 
+        onClick={() => navigate(-1)} 
+        className="back-button"
+      >
+        ← Back
+      </button>
 
-        {content.map((item, index) => (
-          <div 
-            key={index} 
-            className={index % 2 === 0 ? "project-content" : "project-content row-reverse"}
-          >
-            {/* Text Block */}
-            <div className="project-text">
-              <h2>{item.title}</h2>
-              <p>{item.text}</p>
+      <section className="project-section">
+        <div className="section-header">
+          <h1 className="section-title">Commercial Architecture</h1>
+        </div>
+        
+        <div className="projects-grid">
+          {projectItem.map((item) => (
+            <div className="project-card-wrapper" key={item.id}>
+              <div className="project-card-label">
+                <span className="label-dot" />
+                <h2 className="label-title">
+                  {item.title}
+                </h2>
+              </div>
+              
+              <div 
+                className="project-card-image"
+                onClick={() => handleImageClick(item)}
+                style={{ cursor: 'pointer' }}
+              >
+                <img 
+                  src={item.image}
+                  alt={item.title}
+                />
+              </div>
             </div>
+          ))}
+        </div>
 
-            {/* Image Block */}
-            <div className="project-image">
-              <img 
-                src={item.img} 
-                alt={item.title}
-              />
-            </div>
-          </div>
-        ))}
-      </div>
+      </section>
     </div>
   );
 };

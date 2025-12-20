@@ -3,44 +3,65 @@ import './projects.css';
 
 const Healthcare = () => {
   const navigate = useNavigate();
-  const content = [
-    { title: "Hospitals & Medical Centers", text: "State-of-the-art medical facilities designed for patient comfort and care excellence.", img: "https://images.unsplash.com/photo-1631217314830-4f8217c53cc8?w=600&h=400&fit=crop" },
-    { title: "Clinics & Wellness Centers", text: "Modern healthcare facilities combining cutting-edge technology with compassionate patient care.", img: "https://images.unsplash.com/photo-1576091160550-112173f1f664?w=600&h=400&fit=crop" },
-    { title: "Diagnostic Centers", text: "Advanced diagnostic and treatment facilities designed for optimal patient outcomes and safety.", img: "https://images.unsplash.com/photo-1538108149393-fbbd81895907?w=600&h=400&fit=crop" },
+
+  const projectItem = [
+    { id: 1, title: "Hospitals & Medical Centers", slug: "hospitals-medical", links: [{ id: 1 }, { id: 2 }], image: "https://images.unsplash.com/photo-1631217314830-4f8217c53cc8?w=600&h=400&fit=crop" },
+    { id: 2, title: "Clinics & Wellness Centers", slug: "clinics-wellness", links: [{ id: 1 }, { id: 2 }], image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=600&h=400&fit=crop" },
+    { id: 3, title: "Diagnostic Centers", slug: "diagnostic-centers", links: [{ id: 1 }, { id: 2 }], image: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=600&h=400&fit=crop" },
+    { id: 4, title: "Medical Labs", slug: "medical-labs", links: [{ id: 1 }, { id: 2 }], image: "https://images.unsplash.com/photo-1576668219002-53ae47e72e0b?w=600&h=400&fit=crop" },
   ];
 
+  const handleImageClick = (item: typeof projectItem[0]) => {
+    navigate('/allproject', { 
+      state: { 
+        project: { 
+          ...item, 
+          category: 'Healthcare Facilities'
+        } 
+      } 
+    });
+  };
+
   return (
-    <div className="project-container">
-      <div className="project-wrapper">
-        <button 
-          onClick={() => navigate(-1)} 
-          className="back-button"
-        >
-          ← Back
-        </button>
-        <h1 className="project-title">Healthcare Facilities</h1>
+    <div className="project-page">
+      <button 
+        onClick={() => navigate(-1)} 
+        className="back-button"
+      >
+        ← Back
+      </button>
 
-        {content.map((item, index) => (
-          <div 
-            key={index} 
-            className={index % 2 === 0 ? "project-content" : "project-content row-reverse"}
-          >
-            {/* Text Block */}
-            <div className="project-text">
-              <h2>{item.title}</h2>
-              <p>{item.text}</p>
+      <section className="project-section">
+        <div className="section-header">
+          <h1 className="section-title">Healthcare Facilities</h1>
+        </div>
+        
+        <div className="projects-grid">
+          {projectItem.map((item) => (
+            <div className="project-card-wrapper" key={item.id}>
+              <div className="project-card-label">
+                <span className="label-dot" />
+                <h2 className="label-title">
+                  {item.title}
+                </h2>
+              </div>
+              
+              <div 
+                className="project-card-image"
+                onClick={() => handleImageClick(item)}
+                style={{ cursor: 'pointer' }}
+              >
+                <img 
+                  src={item.image}
+                  alt={item.title}
+                />
+              </div>
             </div>
+          ))}
+        </div>
 
-            {/* Image Block */}
-            <div className="project-image">
-              <img 
-                src={item.img} 
-                alt={item.title}
-              />
-            </div>
-          </div>
-        ))}
-      </div>
+      
+      </section>
     </div>
   );
 };

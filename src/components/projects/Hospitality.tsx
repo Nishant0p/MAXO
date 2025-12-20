@@ -3,44 +3,65 @@ import './projects.css';
 
 const Hospitality = () => {
   const navigate = useNavigate();
-  const content = [
-    { title: "Luxury Hotels & Resorts", text: "Luxurious hospitality venues that provide unforgettable experiences for guests.", img: "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&h=400&fit=crop" },
-    { title: "Fine Dining Restaurants", text: "Elegant culinary spaces designed to enhance gastronomic experiences and create lasting memories.", img: "https://images.unsplash.com/photo-1582719471384-894fbb16e074?w=600&h=400&fit=crop" },
-    { title: "Event Venues", text: "Sophisticated event spaces tailored for conferences, weddings, and celebrations of any scale.", img: "https://images.unsplash.com/photo-1445991842772-097fea258e7b?w=600&h=400&fit=crop" },
+
+  const projectItem = [
+    { id: 1, title: "Luxury Hotels & Resorts", slug: "luxury-hotels", links: [{ id: 1 }, { id: 2 }], image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&h=400&fit=crop" },
+    { id: 2, title: "Fine Dining Restaurants", slug: "fine-dining", links: [{ id: 1 }, { id: 2 }], image: "https://images.unsplash.com/photo-1504674900152-cd4628902d4a?w=600&h=400&fit=crop" },
+    { id: 3, title: "Event Venues", slug: "event-venues", links: [{ id: 1 }, { id: 2 }], image: "https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?w=600&h=400&fit=crop" },
+    { id: 4, title: "Spa & Wellness", slug: "spa-wellness", links: [{ id: 1 }, { id: 2 }], image: "https://images.unsplash.com/photo-1544367567-0d5fcfdbae90?w=600&h=400&fit=crop" },
   ];
 
+  const handleImageClick = (item: typeof projectItem[0]) => {
+    navigate('/allproject', { 
+      state: { 
+        project: { 
+          ...item, 
+          category: 'Hospitality Spaces'
+        } 
+      } 
+    });
+  };
+
   return (
-    <div className="project-container">
-      <div className="project-wrapper">
-        <button 
-          onClick={() => navigate(-1)} 
-          className="back-button"
-        >
-          ← Back
-        </button>
-        <h1 className="project-title">Hospitality Spaces</h1>
+    <div className="project-page">
+      <button 
+        onClick={() => navigate(-1)} 
+        className="back-button"
+      >
+        ← Back
+      </button>
 
-        {content.map((item, index) => (
-          <div 
-            key={index} 
-            className={index % 2 === 0 ? "project-content" : "project-content row-reverse"}
-          >
-            {/* Text Block */}
-            <div className="project-text">
-              <h2>{item.title}</h2>
-              <p>{item.text}</p>
+      <section className="project-section">
+        <div className="section-header">
+          <h1 className="section-title">Hospitality Spaces</h1>
+        </div>
+        
+        <div className="projects-grid">
+          {projectItem.map((item) => (
+            <div className="project-card-wrapper" key={item.id}>
+              <div className="project-card-label">
+                <span className="label-dot" />
+                <h2 className="label-title">
+                  {item.title}
+                </h2>
+              </div>
+              
+              <div 
+                className="project-card-image"
+                onClick={() => handleImageClick(item)}
+                style={{ cursor: 'pointer' }}
+              >
+                <img 
+                  src={item.image}
+                  alt={item.title}
+                />
+              </div>
             </div>
+          ))}
+        </div>
 
-            {/* Image Block */}
-            <div className="project-image">
-              <img 
-                src={item.img} 
-                alt={item.title}
-              />
-            </div>
-          </div>
-        ))}
-      </div>
+       
+      </section>
     </div>
   );
 };

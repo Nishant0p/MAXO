@@ -3,44 +3,65 @@ import './projects.css';
 
 const EducationalFacilities = () => {
   const navigate = useNavigate();
-  const content = [
-    { title: "Universities & Colleges", text: "World-class learning environments that inspire intellectual growth and academic excellence.", img: "https://images.unsplash.com/photo-1523580494863-6f3031224c94?w=600&h=400&fit=crop" },
-    { title: "Schools & Learning Centers", text: "Innovative educational spaces designed to foster creativity, collaboration, and lifelong learning.", img: "https://images.unsplash.com/photo-1427504494785-cdda0e4a1786?w=600&h=400&fit=crop" },
-    { title: "Research & Labs", text: "State-of-the-art research facilities equipped for scientific exploration and technological advancement.", img: "https://images.unsplash.com/photo-1497633762265-25c6bdc50e6d?w=600&h=400&fit=crop" },
+
+  const projectItem = [
+    { id: 1, title: "Universities & Colleges", slug: "universities-colleges", links: [{ id: 1 }, { id: 2 }], image: "https://images.unsplash.com/photo-1523580494863-6f3031224c94?w=600&h=400&fit=crop" },
+    { id: 2, title: "Schools & Learning Centers", slug: "schools-learning", links: [{ id: 1 }, { id: 2 }], image: "https://images.unsplash.com/photo-1427504494785-cdaf8fcd87b3?w=600&h=400&fit=crop" },
+    { id: 3, title: "Research & Labs", slug: "research-labs", links: [{ id: 1 }, { id: 2 }], image: "https://images.unsplash.com/photo-1532535360828-9c33265c8310?w=600&h=400&fit=crop" },
+    { id: 4, title: "Training Centers", slug: "training-centers", links: [{ id: 1 }, { id: 2 }], image: "https://images.unsplash.com/photo-1552664730-d307ca884978?w=600&h=400&fit=crop" },
   ];
 
+  const handleImageClick = (item: typeof projectItem[0]) => {
+    navigate('/allproject', { 
+      state: { 
+        project: { 
+          ...item, 
+          category: 'Educational Facilities'
+        } 
+      } 
+    });
+  };
+
   return (
-    <div className="project-container">
-      <div className="project-wrapper">
-        <button 
-          onClick={() => navigate(-1)} 
-          className="back-button"
-        >
-          ← Back
-        </button>
-        <h1 className="project-title">Educational Facilities</h1>
+    <div className="project-page">
+      <button 
+        onClick={() => navigate(-1)} 
+        className="back-button"
+      >
+        ← Back
+      </button>
 
-        {content.map((item, index) => (
-          <div 
-            key={index} 
-            className={index % 2 === 0 ? "project-content" : "project-content row-reverse"}
-          >
-            {/* Text Block */}
-            <div className="project-text">
-              <h2>{item.title}</h2>
-              <p>{item.text}</p>
+      <section className="project-section">
+        <div className="section-header">
+          <h1 className="section-title">Educational Facilities</h1>
+        </div>
+        
+        <div className="projects-grid">
+          {projectItem.map((item) => (
+            <div className="project-card-wrapper" key={item.id}>
+              <div className="project-card-label">
+                <span className="label-dot" />
+                <h2 className="label-title">
+                  {item.title}
+                </h2>
+              </div>
+              
+              <div 
+                className="project-card-image"
+                onClick={() => handleImageClick(item)}
+                style={{ cursor: 'pointer' }}
+              >
+                <img 
+                  src={item.image}
+                  alt={item.title}
+                />
+              </div>
             </div>
+          ))}
+        </div>
 
-            {/* Image Block */}
-            <div className="project-image">
-              <img 
-                src={item.img} 
-                alt={item.title}
-              />
-            </div>
-          </div>
-        ))}
-      </div>
+        
+      </section>
     </div>
   );
 };

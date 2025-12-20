@@ -313,6 +313,7 @@ function AppRoutes() {
   const EducationalFacilities = React.lazy(() => import('./components/projects/EducationalFacilities'));
   const Healthcare = React.lazy(() => import('./components/projects/Healthcare'));
   const RecreationalSpaces = React.lazy(() => import('./components/projects/RecreationalSpaces'));
+  const AllProject = React.lazy(() => import('./components/projects/allproject'));
 
   return (
     <Suspense fallback={<div>Loading...</div>}>
@@ -332,6 +333,7 @@ function AppRoutes() {
         <Route path="/projects/educational-facilities" element={<EducationalFacilities />} />
         <Route path="/projects/healthcare" element={<Healthcare />} />
         <Route path="/projects/recreational-spaces" element={<RecreationalSpaces />} />
+        <Route path="/allproject" element={<AllProject />} />
       </Routes>
     </Suspense>
   );
