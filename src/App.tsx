@@ -79,6 +79,18 @@ export function MaxoLanding() {
     return () => window.removeEventListener('resize', update);
   }, []);
 
+  // Block scroll during preload
+  useEffect(() => {
+    if (isPreloading) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isPreloading]);
+
   const menuItems = [
     { label: 'About', ariaLabel: 'About', link: '/about' },
     { label: 'Our Work', ariaLabel: 'Our Work', link: '/work' },
