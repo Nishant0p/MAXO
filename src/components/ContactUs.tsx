@@ -21,7 +21,7 @@ export default function ContactUs({ navigateTo }: { navigateTo: (page: string) =
       icon: MapPin,
       title: 'Visit Our Studio',
       details: [
-        '1205, Maple Trade Centre',
+        '1215, Maple Trade Centre',
         'Surdhara Circle, Maple Trade Ctr Rd',
         'Thaltej, Ahmedabad, Gujarat 380052'
       ]
