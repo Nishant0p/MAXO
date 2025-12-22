@@ -60,7 +60,7 @@ export default function WorkGallery({ isMobile }: { isMobile?: boolean }) {
               { id: '02', title: 'Mono Residence', loc: 'Oslo, Norway', img: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?q=80&w=2670&auto=format&fit=crop' },
               { id: '03', title: 'Carbon Museum', loc: 'Berlin, Germany', img: 'https://images.unsplash.com/photo-1511818966892-d7d671e672a2?q=80&w=2707&auto=format&fit=crop' },
               { id: '04', title: 'Aero Terminal', loc: 'Dubai, UAE', img: 'https://images.unsplash.com/photo-1555636222-cae831e670b3?q=80&w=2677&auto=format&fit=crop' }
-            ].map((p, i) => (
+            ].map((p) => (
               <div
                 key={p.id}
                 style={{ width: isMobile ? '70vw' : '18vw', minWidth: isMobile ? '260px' : '180px', aspectRatio: '3/4', position: 'relative', flexShrink: 0, cursor: 'pointer', marginBottom: '2vh' }}
