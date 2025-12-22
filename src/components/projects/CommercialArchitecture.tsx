@@ -5,7 +5,7 @@ const CommercialArchitecture = () => {
   const navigate = useNavigate();
 
   const projectItem = [
-    { id: 1, title: "SARDHAV FARM HOUSE", image: "https://images.unsplash.com/photo-1486325212027-8081e485255e?w=600&h=400&fit=crop" },
+    { id: 1, title: "SARDHAV FARM HOUSE", image: "/SARDHAV.jpeg" },
     { id: 2, title: "PODIUM INDORE", image: "https://images.unsplash.com/photo-1567521464027-f127ff144326?w=600&h=400&fit=crop" },
     { id: 3, title: "MIXED USE DEVELOPMENT (VERAVAL)", image: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&h=400&fit=crop" },
     { id: 4, title: "ZUNDAL CORPORATE HOUSE 225_226", image: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=600&h=400&fit=crop" },

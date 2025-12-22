@@ -3,11 +3,18 @@ import './projects.css';
 
 const projectDescriptions: { [key: string]: string } = {
   // Commercial Architecture
-  'SARDHAV FARM HOUSE': `The farmhouse is nestled on the tranquil outskirts of Ahmedabad. The site is generously spread across a lush green expanse, bordered by dense vegetation that creates a serene buffer from the surrounding environment. Each structure is designed with a unique architectural language to enrich the overall experience. The house design reflects a neo-classical style with its symmetrical form, arched openings, and columned portico. The club building adopts a European style, characterized by its terracotta-tiled sloping roof, stuccoed walls, and rhythmic arched windows. The office follows an organic modernist style, defined by its fluid, curvilinear shell structure and minimalistic form. The blend of clean modern finishes with traditional classical elements creates a sense of elegance and timelessness. A winding pathway guides visitors through the manicured lawns, creating visual connection between entrance and the building. The landscape is not just decorative; it’s immersive, with strategically placed trees, shrubs, and garden features that enhance both the privacy and beauty.`,
-  'PODIUM INDORE': 'A contemporary commercial development in Indore, featuring innovative podium architecture and versatile business spaces.',
-  'MIXED USE DEVELOPMENT (VERAVAL)': 'A dynamic mixed-use project in Veraval, integrating commercial, retail, and leisure spaces for a vibrant urban experience.',
-  'ZUNDAL CORPORATE HOUSE 225_226': 'A state-of-the-art corporate house designed for productivity and prestige, located in Zundal.',
-  'ZUNDAL_228 (FACADE )': 'A striking facade project in Zundal, showcasing modern architectural aesthetics and functional design.',
+    'SARDHAV FARM HOUSE': `
+      <strong>Site Area:</strong> 38,750 sq ft<br />
+      <strong>Built Up Area:</strong> 10,600 sq ft<br />
+      <strong>Landscape Area:</strong> 32,200 sq ft<br /><br />
+      The farmhouse is nestled on the tranquil outskirts of Ahmedabad. The site is generously spread across a lush green expanse, bordered by dense vegetation that creates a serene buffer from the surrounding environment.<br /><br />
+      Each structure is designed with a unique architectural language to enrich the overall experience. The house design reflects a neo-classical style with its symmetrical form, arched openings, and columned portico. The club building adopts a European style, characterized by its terracotta-tiled sloping roof, stuccoed walls, and rhythmic arched windows. The office follows an organic modernist style, defined by its fluid, curvilinear shell structure and minimalistic form.<br /><br />
+      The blend of clean modern finishes with traditional classical elements creates a sense of elegance and timelessness. A winding pathway guides visitors through the manicured lawns, creating visual connection between entrance and the building. The landscape is not just decorative; it’s immersive, with strategically placed trees, shrubs, and garden features that enhance both the privacy and beauty.
+    `,
+  'PODIUM INDORE': 'Landscape Architecture Interior Design. A contemporary commercial development in Indore, featuring innovative podium architecture and versatile business spaces.',
+  'MIXED USE DEVELOPMENT (VERAVAL)': 'Landscape Architecture Interior Design. A dynamic mixed-use project in Veraval, integrating commercial, retail, and leisure spaces for a vibrant urban experience.',
+  'ZUNDAL CORPORATE HOUSE 225_226': 'Landscape Architecture Interior Design. A state-of-the-art corporate house designed for productivity and prestige, located in Zundal.',
+  'ZUNDAL_228 (FACADE )': 'Landscape Architecture Interior Design. A striking facade project in Zundal, showcasing modern architectural aesthetics and functional design.',
   'USMANPURA 4BHK': 'A premium 4BHK residential project in Usmanpura, offering spacious living with contemporary design.',
   'SIKHAR BANGLOW': 'A bespoke bungalow project at Sikhar, combining luxury with personalized architectural details.',
   'DIVINE HIGHLAND': 'A high-end commercial and residential development, Divine Highland sets new standards in urban living.',
@@ -68,6 +75,15 @@ const AllProject = () => {
     return projectDescriptions[slug] || (title ? projectDescriptions[title] : undefined) || 'A thoughtfully designed architectural project that reflects our commitment to excellence and innovation.';
   };
 
+  // Helper to check if project is Commercial Architecture
+  const isCommercialArchitecture = [
+    'SARDHAV FARM HOUSE',
+    'PODIUM INDORE',
+    'MIXED USE DEVELOPMENT (VERAVAL)',
+    'ZUNDAL CORPORATE HOUSE 225_226',
+    'ZUNDAL_228 (FACADE )'
+  ].includes(project?.title);
+
   if (!project) {
     return (
       <div style={{ 
@@ -121,9 +137,52 @@ const AllProject = () => {
           <h1 style={{ fontSize: '3rem', marginBottom: '1.5rem', color: '#000', fontWeight: 'bold' }}>
             {project.title}
           </h1>
-          <p style={{ fontSize: '1.1rem', lineHeight: '1.8', color: '#555', marginBottom: '2rem' }}>
-            {getDescription(project.slug, project.title)}
-          </p>
+          {isCommercialArchitecture && (
+            <div style={{ marginBottom: '1rem' }}>
+              <button
+                style={{
+                  background: '#e0e0e0',
+                  color: '#333',
+                  border: 'none',
+                  borderRadius: '20px',
+                  padding: '0.5rem 1.5rem',
+                  fontSize: '1rem',
+                  marginRight: '0.5rem',
+                  marginBottom: '0.5rem',
+                  cursor: 'pointer',
+                }}
+                disabled
+              >
+                Landscape Architecture
+              </button>
+              <button
+                style={{
+                  background: '#e0e0e0',
+                  color: '#333',
+                  border: 'none',
+                  borderRadius: '20px',
+                  padding: '0.5rem 1.5rem',
+                  fontSize: '1rem',
+                  marginRight: '0.5rem',
+                  marginBottom: '0.5rem',
+                  cursor: 'pointer',
+                }}
+                disabled
+              >
+                Interior Design
+              </button>
+            </div>
+          )}
+          {project.title === 'SARDHAV FARM HOUSE' ? (
+            <div
+              style={{ fontSize: '1.1rem', lineHeight: '1.8', color: '#555', marginBottom: '2rem' }}
+              dangerouslySetInnerHTML={{ __html: getDescription(project.slug, project.title) }}
+            />
+          ) : (
+            <p style={{ fontSize: '1.1rem', lineHeight: '1.8', color: '#555', marginBottom: '2rem' }}>
+              {getDescription(project.slug, project.title)}
+            </p>
+          )}
         </div>
 
         {/* Right Side - Image */}
