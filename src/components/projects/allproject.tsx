@@ -3,10 +3,17 @@ import './projects.css';
 
 const projectDescriptions: { [key: string]: string } = {
   // Commercial Architecture
-  'corporate-offices': 'State-of-the-art corporate office spaces designed to maximize productivity and foster collaboration. Features modern architectural elements with sustainable design practices.',
-  'retail-shopping': 'Premium retail and shopping centers that blend architectural excellence with exceptional retail experiences. Designed to attract customers and drive commerce.',
-  'business-hubs': 'Dynamic business hubs that serve as epicenters for innovation and entrepreneurship. Equipped with modern amenities and flexible spaces.',
-  'modern-offices': 'Contemporary office spaces featuring cutting-edge design and technology. Optimized for modern work culture and employee wellness.',
+  'SARDHAV FARM HOUSE': `The farmhouse is nestled on the tranquil outskirts of Ahmedabad. The site is generously spread across a lush green expanse, bordered by dense vegetation that creates a serene buffer from the surrounding environment. Each structure is designed with a unique architectural language to enrich the overall experience. The house design reflects a neo-classical style with its symmetrical form, arched openings, and columned portico. The club building adopts a European style, characterized by its terracotta-tiled sloping roof, stuccoed walls, and rhythmic arched windows. The office follows an organic modernist style, defined by its fluid, curvilinear shell structure and minimalistic form. The blend of clean modern finishes with traditional classical elements creates a sense of elegance and timelessness. A winding pathway guides visitors through the manicured lawns, creating visual connection between entrance and the building. The landscape is not just decorative; it’s immersive, with strategically placed trees, shrubs, and garden features that enhance both the privacy and beauty.`,
+  'PODIUM INDORE': 'A contemporary commercial development in Indore, featuring innovative podium architecture and versatile business spaces.',
+  'MIXED USE DEVELOPMENT (VERAVAL)': 'A dynamic mixed-use project in Veraval, integrating commercial, retail, and leisure spaces for a vibrant urban experience.',
+  'ZUNDAL CORPORATE HOUSE 225_226': 'A state-of-the-art corporate house designed for productivity and prestige, located in Zundal.',
+  'ZUNDAL_228 (FACADE )': 'A striking facade project in Zundal, showcasing modern architectural aesthetics and functional design.',
+  'USMANPURA 4BHK': 'A premium 4BHK residential project in Usmanpura, offering spacious living with contemporary design.',
+  'SIKHAR BANGLOW': 'A bespoke bungalow project at Sikhar, combining luxury with personalized architectural details.',
+  'DIVINE HIGHLAND': 'A high-end commercial and residential development, Divine Highland sets new standards in urban living.',
+  'UTSAV DEVELOPERS': 'A signature project by Utsav Developers, known for quality construction and innovative design.',
+  'VARDHAN INDAUSTRIAL PARK OFFICE': 'Modern office spaces within Vardhan Industrial Park, designed for efficiency and growth.',
+  'VARDHAN SITE OFFICE': 'A functional and well-equipped site office at Vardhan, supporting seamless project management.',
   
   // Cultural Public
   'museums-galleries': 'World-class museums and gallery spaces that showcase art and culture. Designed to provide immersive experiences and preserve heritage.',
@@ -56,8 +63,9 @@ const AllProject = () => {
   const location = useLocation();
   const project = location.state?.project;
 
-  const getDescription = (slug: string) => {
-    return projectDescriptions[slug] || 'A thoughtfully designed architectural project that reflects our commitment to excellence and innovation.';
+  const getDescription = (slug: string, title?: string) => {
+    // Try slug, then title, then fallback
+    return projectDescriptions[slug] || (title ? projectDescriptions[title] : undefined) || 'A thoughtfully designed architectural project that reflects our commitment to excellence and innovation.';
   };
 
   if (!project) {
@@ -114,7 +122,7 @@ const AllProject = () => {
             {project.title}
           </h1>
           <p style={{ fontSize: '1.1rem', lineHeight: '1.8', color: '#555', marginBottom: '2rem' }}>
-            {getDescription(project.slug)}
+            {getDescription(project.slug, project.title)}
           </p>
         </div>
 
