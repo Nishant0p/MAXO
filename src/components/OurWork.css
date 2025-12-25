@@ -64,7 +64,7 @@
 /* 4-column grid for 8 projects */
 .ourwork-grid-4cols {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 60px 4%;
   padding: 80px;
   max-width: 1600px;
