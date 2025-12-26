@@ -66,7 +66,7 @@ const CardSwap: React.FC<CardSwapProps> = ({
   height = 400,
   cardDistance = 60,
   verticalDistance = 70,
-  delay = 5000,
+  delay = 3800,
   pauseOnHover = false,
   onCardClick,
   skewAmount = 6,
@@ -77,9 +77,9 @@ const CardSwap: React.FC<CardSwapProps> = ({
     easing === 'elastic'
       ? {
           ease: 'elastic.out(0.6,0.9)',
-          durDrop: 2,
-          durMove: 2,
-          durReturn: 2,
+          durDrop: 1.6,
+          durMove: 1.6,
+          durReturn: 1.6,
           promoteOverlap: 0.9,
           returnDelay: 0.05
         }

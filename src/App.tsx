@@ -180,22 +180,7 @@ export function MaxoLanding() {
 
     {/* Second Section: Modern About Section */}
     <div style={{ position: 'relative', backgroundColor: 'white', width: '100%' }}>
-      {/* Background Image for Second Div */}
-      <div style={{
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        backgroundImage: 'url("/2nd div.png")',
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        opacity: 0.15, // Adjust opacity to make text readable
-        pointerEvents: 'none',
-        zIndex: 0
-      }} />
-      
-      <div style={{ position: 'relative', zIndex: 1 }}>
+      <div style={{ position: 'relative' }}>
         <AboutModern isMobile={isMobile} />
       </div>
     </div>
