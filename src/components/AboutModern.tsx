@@ -81,6 +81,7 @@ export default function AboutModern({ isMobile }: { isMobile: boolean }) {
                 <Card style={{ backgroundImage: "url('https://images.unsplash.com/photo-1486718448742-163732cd1544?q=80&w=2574&auto=format&fit=crop')" }} />
                 <Card style={{ backgroundImage: "url('https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=2301&auto=format&fit=crop')" }} />
                 <Card style={{ backgroundImage: "url('https://images.unsplash.com/photo-1487958449943-2429e8be8625?q=80&w=2670&auto=format&fit=crop')" }} />
+               <Card style={{ backgroundImage: "url('https://images.unsplash.com/photo-1460317442991-0ec209397118?q=80&w=2400&auto=format&fit=crop')" }} />
              </CardSwap>
           </div>
 
