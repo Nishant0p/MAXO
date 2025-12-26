@@ -201,12 +201,12 @@ export function MaxoLanding() {
     </div>
 
     {/* Third Section: Work Gallery */}
-    <div style={{ position: 'sticky', top: 0, zIndex: 40, width: '100%' }}>
+    <div style={{ position: 'relative', zIndex: 40, width: '100%' }}>
       <WorkGallery isMobile={isMobile} />
     </div>
 
     {/* Fourth Section: Dome Gallery */}
-    <div style={{ height: '800px', width: '100%', position: 'sticky', top: 0, overflow: 'hidden', zIndex: 50, backgroundColor: '#1a1a1a' }}>
+    <div style={{ height: '800px', width: '100%', position: 'relative', overflow: 'hidden', zIndex: 50, backgroundColor: '#1a1a1a' }}>
       <DomeGallery overlayBlurColor="#222222" />
     </div>
 
