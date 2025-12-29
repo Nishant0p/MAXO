@@ -66,6 +66,24 @@
   color: #111;
 }
 
+.work-return {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: #111;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.work-return-arrow {
+  font-size: 18px;
+  line-height: 1;
+}
+
 .work-left .work-summary {
   color: #555;
   line-height: 1.8;

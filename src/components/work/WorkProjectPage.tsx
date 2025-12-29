@@ -104,13 +104,6 @@ export default function WorkProjectPage() {
       <div className="work-hero">
         {heroUrl ? <div className="work-hero-bg" style={{ backgroundImage: `url(${heroUrl})` }} /> : null}
         <div className="work-hero-overlay" />
-        <button
-          onClick={() => navigate(-1)}
-          className="back-button"
-          style={{ position: 'absolute', top: 24, left: 24, zIndex: 2 }}
-        >
-          ← Back
-        </button>
         <div className="work-hero-title">
           {categoryTitle ? <p>{String(categoryTitle)}</p> : null}
           <h1>{title}</h1>
@@ -120,6 +113,14 @@ export default function WorkProjectPage() {
       <div className="work-body">
         <div className="work-body-grid">
           <div className="work-left">
+            <button
+              type="button"
+              className="work-return"
+              onClick={() => navigate(categoryUid ? `/work/${categoryUid}` : '/work')}
+            >
+              <span className="work-return-arrow">←</span>
+              <span>Return to categories</span>
+            </button>
             {project.data.summary ? <p className="work-summary">{project.data.summary}</p> : null}
             {project.data.body ? <PrismicRichText field={project.data.body} /> : null}
           </div>
