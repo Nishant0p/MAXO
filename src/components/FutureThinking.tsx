@@ -9,7 +9,7 @@ export default function FutureThinking({ navigateTo }: { navigateTo: (page: stri
   // const location = useLocation();
   // const navigate = useNavigate();
 
-  const heroBgUrl = encodeURI('/Screenshot 2025-12-29 at 1.05.01\u202fPM.png');
+  const heroBgUrl = '/future-contact-bg.png';
 
   const innovations = [
     {

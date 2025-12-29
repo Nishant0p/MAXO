@@ -8,7 +8,7 @@ export default function ContactUs({ navigateTo }: { navigateTo: (page: string) =
   // const location = useLocation();
   // const navigate = useNavigate();
 
-  const heroBgUrl = encodeURI('/Screenshot 2025-12-29 at 1.05.01\u202fPM.png');
+  const heroBgUrl = '/future-contact-bg.png';
 
   const menuItems = [
     { label: 'About', ariaLabel: 'About', link: '/about' },
