@@ -8,6 +8,8 @@ export default function ContactUs({ navigateTo }: { navigateTo: (page: string) =
   // const location = useLocation();
   // const navigate = useNavigate();
 
+  const heroBgUrl = encodeURI('/Screenshot 2025-12-29 at 1.05.01\u202fPM.png');
+
   const menuItems = [
     { label: 'About', ariaLabel: 'About', link: '/about' },
     { label: 'Our Work', ariaLabel: 'Our Work', link: '/work' },
@@ -64,7 +66,11 @@ export default function ContactUs({ navigateTo }: { navigateTo: (page: string) =
         style={{
           padding: '120px 40px 80px',
           textAlign: 'center',
-          background: 'linear-gradient(135deg, rgba(245,245,245,0.9) 0%, rgba(230,230,230,0.9) 100%)'
+          color: 'white',
+          backgroundImage: `linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)), url("${heroBgUrl}")`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat'
         }}
       >
         <motion.h1
@@ -86,7 +92,7 @@ export default function ContactUs({ navigateTo }: { navigateTo: (page: string) =
           transition={{ delay: 0.4, duration: 0.8 }}
           style={{
             fontSize: '1.2rem',
-            color: 'rgba(0, 0, 0, 0.8)',
+            color: 'rgba(255, 255, 255, 0.9)',
             maxWidth: '800px',
             margin: '0 auto',
             lineHeight: 1.6
