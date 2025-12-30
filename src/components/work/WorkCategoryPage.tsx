@@ -105,6 +105,9 @@ export default function WorkCategoryPage() {
             {projects.map((p) => {
               const imageUrl = asImageSrc((p.data as any).hero_image);
               const projectTitle = p.data?.title || p.uid || 'Project';
+              const projectKey = p.uid || p.id;
+              const projectHref = `/work/${categoryUid}/${projectKey}`;
+              const projectSummary = (p.data as any).project_summary || (p.data as any).summary;
               return (
                 <div className="project-card-wrapper" key={p.id}>
                   <div className="project-card-label">
@@ -114,14 +117,19 @@ export default function WorkCategoryPage() {
 
                   <div
                     className="project-card-image"
-                    onClick={() => navigate(`/work/${categoryUid}/${p.uid}`)}
-                    style={{ cursor: 'pointer' }}
+                    onClick={() => {
+                      navigate(projectHref);
+                    }}
+                    style={{
+                      cursor: 'pointer',
+                      opacity: 1,
+                    }}
                   >
                     {imageUrl ? <img src={imageUrl} alt={projectTitle} /> : null}
                   </div>
 
-                  {(p.data as any).summary ? (
-                    <p style={{ color: '#555', lineHeight: 1.6, marginTop: '8px' }}>{(p.data as any).summary}</p>
+                  {projectSummary ? (
+                    <p style={{ color: '#555', lineHeight: 1.6, marginTop: '8px' }}>{projectSummary}</p>
                   ) : null}
                 </div>
               );

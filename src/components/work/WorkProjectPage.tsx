@@ -8,13 +8,17 @@ import './WorkProjectPage.css';
 type ProjectDoc = {
   id: string;
   uid: string | null;
+  tags?: string[];
   data: {
     title?: string;
     summary?: string;
+    project_summary?: string;
+    address?: string;
     hero_image?: any;
     body?: any;
     gallery?: Array<{ image?: any; caption?: string }>;
     category?: { uid?: string; data?: { title?: string } } | null;
+    tags?: Array<{ tag?: string }>;
   };
 };
 
@@ -28,6 +32,7 @@ export default function WorkProjectPage() {
   const [project, setProject] = useState<ProjectDoc | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showAllImages, setShowAllImages] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -43,10 +48,23 @@ export default function WorkProjectPage() {
         if (!projectUid) {
           throw new Error('Missing project.');
         }
+        if (projectUid === 'null' || projectUid === 'undefined') {
+          throw new Error('Missing project UID.');
+        }
 
-        const doc = (await client.getByUID('project', projectUid, {
-          fetchLinks: ['work_category.title'],
-        })) as unknown as ProjectDoc;
+        let doc: ProjectDoc;
+        try {
+          doc = (await client.getByUID('project', projectUid, {
+            lang: '*',
+            fetchLinks: ['work_category.title'],
+          })) as unknown as ProjectDoc;
+        } catch (uidErr) {
+          // If the URL param is a Prismic document ID (because the doc has no UID), fall back to getByID.
+          doc = (await client.getByID(projectUid, {
+            lang: '*',
+            fetchLinks: ['work_category.title'],
+          })) as unknown as ProjectDoc;
+        }
 
         if (cancelled) return;
         setProject(doc);
@@ -92,6 +110,16 @@ export default function WorkProjectPage() {
   const heroUrl = asImageSrc(project.data.hero_image as any);
   const categoryTitle = (project.data.category as any)?.data?.title || categoryUid;
 
+  // Backward/forward compatibility with evolving Prismic schema:
+  // - If you rename old `summary` -> `address`, `data.address` will exist.
+  // - If you add a new summary field, prefer `data.project_summary` then `data.summary`.
+  const address = project.data.address || (project.data as any)?.location;
+  const documentTags = (project.tags || []).filter(Boolean);
+  const fieldTags = (project.data.tags || [])
+    .map((t) => t.tag)
+    .filter((t): t is string => Boolean(t));
+  const tags = Array.from(new Set([...documentTags, ...fieldTags]));
+
   const galleryItems = (project.data.gallery || [])
     .map((g) => ({
       url: asImageSrc((g as any).image),
@@ -99,38 +127,78 @@ export default function WorkProjectPage() {
     }))
     .filter((g) => Boolean(g.url));
 
-  const rightClass = galleryItems.length <= 1 ? 'work-right single' : 'work-right';
+  const allImages = [
+    heroUrl ? { url: heroUrl, caption: undefined as string | undefined } : null,
+    ...galleryItems,
+  ]
+    .filter(Boolean)
+    .map((g) => g as { url: string; caption?: string });
+
+  const uniqueImages = allImages.filter((img, idx, arr) => arr.findIndex((x) => x.url === img.url) === idx);
+  const primaryImage = uniqueImages[0];
+  const extraImages = uniqueImages.slice(1);
+
+  const previewImages = extraImages.slice(0, 4);
+  const remainingImages = extraImages.slice(4);
+  const shownImages = showAllImages ? extraImages : previewImages;
+
+  const rightClass = shownImages.length === 0 ? 'work-right single' : 'work-right';
 
   return (
     <div className="work-project">
       <div className="work-hero">
         {heroUrl ? <div className="work-hero-bg" style={{ backgroundImage: `url(${heroUrl})` }} /> : null}
         <div className="work-hero-overlay" />
-        <div className="work-hero-title">
-          {categoryTitle ? <p>{String(categoryTitle)}</p> : null}
-          <h1>{title}</h1>
-        </div>
       </div>
 
       <div className="work-body">
         <div className="work-body-grid">
           <div className="work-left">
+            <div className="work-project-meta">
+              {categoryTitle ? <p className="work-project-kicker">{String(categoryTitle)}</p> : null}
+              <h1 className="work-project-title">{title}</h1>
+              {address ? <p className="work-project-address">{String(address)}</p> : null}
+              {tags.length ? (
+                <div className="work-project-tags" aria-label="Project tags">
+                  {tags.map((t) => (
+                    <span key={t} className="work-project-tag">{t}</span>
+                  ))}
+                </div>
+              ) : null}
+            </div>
+
+            {project.data.body ? <PrismicRichText field={project.data.body} /> : null}
+
             <button
               type="button"
               className="work-return"
               onClick={() => navigate(backHref)}
             >
               <span className="work-return-arrow">←</span>
-              <span>Return to categories</span>
+              <span>Return to category</span>
             </button>
-            {project.data.summary ? <p className="work-summary">{project.data.summary}</p> : null}
-            {project.data.body ? <PrismicRichText field={project.data.body} /> : null}
           </div>
 
-          <div className={rightClass}>
-            {galleryItems.map((g) => (
-              <img key={g.url} src={g.url!} alt={g.caption || title} />
+          <div id="project-gallery" className={rightClass}>
+            {primaryImage ? (
+              <div className="work-image-primaryWrap">
+                <img className="work-image-primary" src={primaryImage.url} alt={title} />
+              </div>
+            ) : null}
+
+            {shownImages.map((g) => (
+              <img key={g.url} src={g.url} alt={g.caption || title} />
             ))}
+
+            {!showAllImages && remainingImages.length ? (
+              <button
+                type="button"
+                className="work-view-more"
+                onClick={() => setShowAllImages(true)}
+              >
+                View more images
+              </button>
+            ) : null}
           </div>
         </div>
       </div>

@@ -64,6 +64,53 @@
 
 .work-left {
   color: #111;
+  display: flex;
+  flex-direction: column;
+}
+
+.work-project-meta {
+  margin-bottom: 22px;
+}
+
+.work-project-kicker {
+  margin: 0 0 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  font-size: 12px;
+  opacity: 0.85;
+}
+
+.work-project-title {
+  margin: 0;
+  font-size: 44px;
+  font-weight: 600;
+  line-height: 1.05;
+}
+
+.work-project-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.work-project-tag {
+  border: 1px solid rgba(17, 17, 17, 0.16);
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.9;
+}
+
+.work-project-address {
+  margin: 10px 0 0;
+  font-size: 44px;
+  font-weight: 300;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  opacity: 0.55;
 }
 
 .work-return {
@@ -76,6 +123,12 @@
   color: #111;
   font-size: 14px;
   line-height: 1;
+  cursor: pointer;
+  margin-top: 26px;
+}
+
+.work-return:hover {
+  opacity: 0.75;
 }
 
 .work-return-arrow {
@@ -83,10 +136,29 @@
   line-height: 1;
 }
 
-.work-left .work-summary {
-  color: #555;
-  line-height: 1.8;
-  margin-top: 18px;
+
+.work-view-more {
+  margin-top: 26px;
+  border: 1px solid rgba(17, 17, 17, 0.22);
+  background: transparent;
+  color: #111;
+  padding: 12px 14px;
+  cursor: pointer;
+  font-size: 12px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  align-self: flex-start;
+}
+
+.work-right .work-view-more {
+  grid-column: 1 / -1;
+  width: 100%;
+  align-self: stretch;
+  justify-self: stretch;
+}
+
+.work-view-more:hover {
+  opacity: 0.75;
 }
 
 .work-right {
@@ -104,6 +176,21 @@
   height: 320px;
   object-fit: cover;
   border-radius: 10px;
+  display: block;
+}
+
+.work-image-primaryWrap {
+  grid-column: 1 / -1;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #000;
+}
+
+.work-image-primary {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
 }
 
 @media (max-width: 1024px) {
@@ -115,6 +202,15 @@
   .work-hero-title h1 {
     font-size: 44px;
   }
+
+  .work-project-title {
+    font-size: 36px;
+  }
+
+  .work-project-address {
+    font-size: 36px;
+  }
+
 
   .work-body {
     padding: 60px 40px 80px;
@@ -135,6 +231,15 @@
   .work-hero-title h1 {
     font-size: 32px;
   }
+
+  .work-project-title {
+    font-size: 30px;
+  }
+
+  .work-project-address {
+    font-size: 30px;
+  }
+
 
   .work-body {
     padding: 40px 20px 70px;
