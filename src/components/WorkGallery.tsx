@@ -16,7 +16,7 @@ const lowerRow = projects.slice(4, 8);
 
 export default function WorkGallery({ isMobile }: { isMobile?: boolean }) {
   return (
-    <section style={{ position: 'relative', zIndex: 40, background: 'linear-gradient(to bottom, #ffffff, #e0e0e0)', padding: '100px 0', overflow: 'hidden' }}>
+    <section style={{ position: 'relative', zIndex: 40, backgroundColor: '#e8e8e8', padding: '100px 0', overflow: 'hidden' }}>
       {/* Background Animation: GIF (sticky, always behind content) */}
       <div style={{ 
         position: 'absolute',
@@ -82,11 +82,15 @@ function Card({ project, isMobile }: { project: any, isMobile?: boolean }) {
     <div
       style={{ width: isMobile ? '60vw' : '22vw', minWidth: isMobile ? '220px' : '280px', aspectRatio: '12/8', position: 'relative', flexShrink: 0, cursor: 'pointer' }}
     >
-      <div style={{ width: '100%', height: '100%', overflow: 'hidden', borderRadius: '4px', boxShadow: '0 2px 12px rgba(0,0,0,0.15)' }}>
+      <div style={{ width: '100%', height: '100%', overflow: 'hidden', borderRadius: '4px', boxShadow: '0 2px 12px rgba(0,0,0,0.15)', position: 'relative' }}>
         <img 
           src={project.img} 
           alt={project.title} 
           style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.5s' }} 
+        />
+        <div
+          aria-hidden="true"
+          style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.25)' }}
         />
       </div>
       <div style={{ position: 'absolute', bottom: '20px', left: '20px', textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}>

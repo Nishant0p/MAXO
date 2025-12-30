@@ -58,6 +58,7 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
   const panelRef = useRef<HTMLDivElement | null>(null);
   const preLayersRef = useRef<HTMLDivElement | null>(null);
   const preLayerElsRef = useRef<HTMLElement[]>([]);
+  const edgeZoneRef = useRef<HTMLDivElement | null>(null);
   
   // Hamburger lines refs
   const line1Ref = useRef<HTMLSpanElement | null>(null);
@@ -87,6 +88,8 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
 
       const offscreen = position === 'left' ? -100 : 100;
       gsap.set([panel, ...preLayers], { xPercent: offscreen });
+
+      if (edgeZoneRef.current) gsap.set(edgeZoneRef.current, { x: 0 });
       
       // Initial "pause bars" state
       gsap.set(l1, { x: -3, rotate: 0, transformOrigin: '50% 50%' });
@@ -100,6 +103,7 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
   const buildOpenTimeline = useCallback(() => {
     const panel = panelRef.current;
     const layers = preLayerElsRef.current;
+    const edgeZone = edgeZoneRef.current;
     if (!panel) return null;
 
     openTlRef.current?.kill();
@@ -146,6 +150,25 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
       { xPercent: 0, duration: panelDuration, ease: 'power4.out' },
       panelInsertTime
     );
+
+    // Move the edge bar (handle) with the drawer so it feels attached.
+    if (edgeZone) {
+      // Slide the edge/handle to the outer edge of the open panel.
+      // Keeping it OUTSIDE the panel prevents it from covering address/mail content.
+      const panelWidth = panel.getBoundingClientRect().width;
+      const delta = Math.max(0, panelWidth);
+      const targetX = position === 'right' ? -delta : delta;
+      tl.to(
+        edgeZone,
+        {
+          x: targetX,
+          duration: panelDuration,
+          ease: 'power4.out',
+          overwrite: 'auto'
+        },
+        panelInsertTime
+      );
+    }
 
     if (itemEls.length) {
       const itemsStartRatio = 0.15;
@@ -231,6 +254,7 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
 
     const panel = panelRef.current;
     const layers = preLayerElsRef.current;
+    const edgeZone = edgeZoneRef.current;
     if (!panel) return;
 
     const all: HTMLElement[] = [...layers, panel];
@@ -259,6 +283,15 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
         busyRef.current = false;
       }
     });
+
+    if (edgeZone) {
+      gsap.to(edgeZone, {
+        x: 0,
+        duration: 0.32,
+        ease: 'power3.in',
+        overwrite: 'auto'
+      });
+    }
   }, [position]);
 
   const animateIcon = useCallback((_opening: boolean) => {
@@ -382,7 +415,7 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
           return arr.map((c, i) => <div key={i} className="sm-prelayer" style={{ background: c }} />);
         })()}
       </div>
-      <div className="sm-edge-zone" aria-hidden={false}>
+      <div ref={edgeZoneRef} className="sm-edge-zone" aria-hidden={false}>
         <button
           ref={toggleBtnRef}
           className="sm-edge-toggle"
