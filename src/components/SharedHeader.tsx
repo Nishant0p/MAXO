@@ -98,8 +98,13 @@ export default function SharedHeader({ isMobile, isPreloading = false }: { isMob
             items={menuItems}
             socialItems={[
               { label: 'Instagram', link: 'https://instagram.com' },
+<<<<<<< HEAD
               { label: 'LinkedIn', link: 'https://linkedin.com' },
               { label: 'WhatsApp', link: 'https://wa.me/+' }
+=======
+              { label: 'Twitter', link: 'https://twitter.com' },
+              { label: 'YouTube', link: 'https://youtube.com' }
+>>>>>>> 288e84a271674fc9a510bd9f967d0a2af25d5b05
             ]}
             position="left"
             colors={['#fff', '#fff', '#fff']}

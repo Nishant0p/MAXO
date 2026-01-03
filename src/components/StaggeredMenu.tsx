@@ -1,6 +1,10 @@
 import React, { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
+<<<<<<< HEAD
 // Social icons replaced with plain text labels
+=======
+import { Instagram, Twitter, Youtube } from 'lucide-react';
+>>>>>>> 288e84a271674fc9a510bd9f967d0a2af25d5b05
 import { useNavigate } from 'react-router-dom';
 import './StaggeredMenu.css';
 
@@ -435,7 +439,11 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
       <aside id="staggered-menu-panel" ref={panelRef} className="staggered-menu-panel" aria-hidden={!open}>
         <div className="sm-panel-inner">
           <a href="/" className="sm-menu-home" aria-label="Home" onClick={handleHomeClick}>
+<<<<<<< HEAD
                 <img src={resolvedLogoUrl} alt="Home" style={{ width: '360px', height: 'auto', display: 'block' }} />
+=======
+            <img src={resolvedLogoUrl} alt="Home" />
+>>>>>>> 288e84a271674fc9a510bd9f967d0a2af25d5b05
           </a>
 
           <div className="sm-menu-desktop-right" aria-hidden={!open}>
@@ -486,6 +494,7 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
               <h3 className="sm-socials-title">Socials</h3>
               <ul className="sm-socials-list" role="list">
                 {socialItems.map((s, i) => {
+<<<<<<< HEAD
                   const lowerLabel = s.label.toLowerCase();
                   let socialText = s.label;
                   if (lowerLabel.includes('instagram')) socialText = 'Instagram';
@@ -496,6 +505,18 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
                     <li key={s.label + i} className="sm-socials-item">
                       <a href={s.link} target="_blank" rel="noopener noreferrer" className="sm-socials-link" aria-label={s.label}>
                         {socialText}
+=======
+                  let Icon = null;
+                  const lowerLabel = s.label.toLowerCase();
+                  if (lowerLabel.includes('instagram')) Icon = Instagram;
+                  else if (lowerLabel.includes('twitter')) Icon = Twitter;
+                  else if (lowerLabel.includes('youtube')) Icon = Youtube;
+                  
+                  return (
+                    <li key={s.label + i} className="sm-socials-item">
+                      <a href={s.link} target="_blank" rel="noopener noreferrer" className="sm-socials-link" aria-label={s.label}>
+                        {Icon ? <Icon size={20} /> : s.label}
+>>>>>>> 288e84a271674fc9a510bd9f967d0a2af25d5b05
                       </a>
                     </li>
                   );

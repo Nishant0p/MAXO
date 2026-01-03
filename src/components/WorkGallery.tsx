@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 // Animation removed: static gallery
+=======
+import { motion } from 'framer-motion';
+>>>>>>> 288e84a271674fc9a510bd9f967d0a2af25d5b05
 
 const projects = [
   { id: '01', title: 'Commercial Architecture', loc: 'Tokyo, Japan', img: 'https://images.unsplash.com/photo-1486718448742-163732cd1544?q=80&w=2574&auto=format&fit=crop' },
@@ -60,6 +64,7 @@ export default function WorkGallery({ isMobile }: { isMobile?: boolean }) {
 }
 
 function Marquee({ children, direction = 'left', speed = 20 }: { children: React.ReactNode, direction?: 'left' | 'right', speed?: number }) {
+<<<<<<< HEAD
   const innerStyle: React.CSSProperties = {
     display: 'flex',
     gap: '30px',
@@ -71,13 +76,29 @@ function Marquee({ children, direction = 'left', speed = 20 }: { children: React
   return (
     <div style={{ display: 'flex', overflow: 'hidden', width: '100%' }} data-direction={direction} data-speed={speed}>
       <div style={innerStyle}>
+=======
+  return (
+    <div style={{ display: 'flex', overflow: 'hidden', width: '100%' }}>
+      <motion.div
+        initial={{ x: direction === 'left' ? '-50%' : '0%' }}
+        animate={{ x: direction === 'left' ? '0%' : '-50%' }}
+        transition={{ duration: speed, ease: "linear", repeat: Infinity }}
+        style={{ display: 'flex', gap: '30px', minWidth: 'max-content', paddingRight: '30px' }}
+      >
+>>>>>>> 288e84a271674fc9a510bd9f967d0a2af25d5b05
         {children}
         {children}
         {children}
         {children}
+<<<<<<< HEAD
       </div>
     </div>
   );
+=======
+      </motion.div>
+    </div>
+  )
+>>>>>>> 288e84a271674fc9a510bd9f967d0a2af25d5b05
 }
 
 function Card({ project, isMobile }: { project: any, isMobile?: boolean }) {

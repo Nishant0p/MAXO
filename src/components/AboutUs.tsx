@@ -1,6 +1,11 @@
 import { useRef, useEffect, useState } from 'react';
+<<<<<<< HEAD
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
+=======
+import { motion, useScroll, useTransform, useInView, useMotionValue, animate } from 'framer-motion';
+import { ArrowUpRight, Award, Users, Building, Target } from 'lucide-react';
+>>>>>>> 288e84a271674fc9a510bd9f967d0a2af25d5b05
 import TiltedCard, { Orb } from './TiltedCard';
 import StaggeredMenu from './StaggeredMenu';
 import './AboutUs.css';
@@ -32,13 +37,41 @@ const lineReveal = {
   visible: { scaleX: 1, transition: { duration: 1.2, ease: [0.77, 0, 0.175, 1] as const } }
 };
 
+<<<<<<< HEAD
 
+=======
+// Animated counter component
+const AnimatedCounter = ({ from, to, suffix = "" }: { from: number; to: number; suffix?: string }) => {
+  const count = useMotionValue(from);
+  const rounded = useTransform(count, (latest) => Math.round(latest));
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const [displayValue, setDisplayValue] = useState(from);
+
+  useEffect(() => {
+    if (isInView) {
+      const controls = animate(count, to, { duration: 2.5, ease: "easeOut" });
+      return controls.stop;
+    }
+  }, [isInView, count, to]);
+
+  useEffect(() => {
+    rounded.on("change", (v) => setDisplayValue(v));
+  }, [rounded]);
+
+  return <span ref={ref}>{displayValue}{suffix}</span>;
+};
+>>>>>>> 288e84a271674fc9a510bd9f967d0a2af25d5b05
 
 export default function AboutUs() {
   const containerRef = useRef(null);
   const heroRef = useRef(null);
   const storyRef = useRef(null);
+<<<<<<< HEAD
 
+=======
+  const statsRef = useRef(null);
+>>>>>>> 288e84a271674fc9a510bd9f967d0a2af25d5b05
   const [isTablet, setIsTablet] = useState(false);
 
   useEffect(() => {
@@ -66,7 +99,14 @@ export default function AboutUs() {
     offset: ["start end", "end start"]
   });
 
+<<<<<<< HEAD
 
+=======
+  const { scrollYProgress: statsProgress } = useScroll({
+    target: statsRef,
+    offset: ["start end", "end start"]
+  });
+>>>>>>> 288e84a271674fc9a510bd9f967d0a2af25d5b05
 
   const heroOpacity = useTransform(heroProgress, [0, 0.8], [1, 0]);
   const heroScale = useTransform(heroProgress, [0, 0.8], [1, 1.1]);
@@ -75,8 +115,19 @@ export default function AboutUs() {
   // Keep scroll progress refs for potential future animations
   void scrollYProgress;
   void storyProgress;
+<<<<<<< HEAD
 
 
+=======
+  void statsProgress;
+
+  const stats = [
+    { number: 25, suffix: "+", label: "Years Experience", icon: Award },
+    { number: 500, suffix: "+", label: "Projects Completed", icon: Building },
+    { number: 120, suffix: "+", label: "Team Members", icon: Users },
+    { number: 15, suffix: "", label: "Countries Served", icon: Target }
+  ];
+>>>>>>> 288e84a271674fc9a510bd9f967d0a2af25d5b05
 
   const values = [
     {
@@ -112,7 +163,10 @@ export default function AboutUs() {
         menuButtonColor="white"
         openMenuButtonColor="black"
         accentColor="#888"
+<<<<<<< HEAD
         logoUrl="/blacmaxologo.png"
+=======
+>>>>>>> 288e84a271674fc9a510bd9f967d0a2af25d5b05
       />
 
       {/* Hero Section */}
@@ -235,6 +289,45 @@ export default function AboutUs() {
         </div>
       </section>
 
+<<<<<<< HEAD
+=======
+      {/* Stats Section */}
+      <section ref={statsRef} className="about-stats">
+        <motion.div className="about-stats-container">
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="about-stats-header"
+          >
+            <h2 className="about-stats-title">
+              Numbers That <span style={{ fontStyle: 'italic' }}>Define Us</span>
+            </h2>
+          </motion.div>
+
+          <div className="about-stats-grid">
+            {stats.map((stat, index) => (
+              <motion.div
+                key={stat.label}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                className="about-stat-item"
+              >
+                <stat.icon size={24} className="about-stat-icon" />
+                <div className="about-stat-number">
+                  <AnimatedCounter from={0} to={stat.number} suffix={stat.suffix} />
+                </div>
+                <p className="about-stat-label">{stat.label}</p>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      </section>
+
+>>>>>>> 288e84a271674fc9a510bd9f967d0a2af25d5b05
       {/* Values Section */}
       <section className="about-values">
         <div className="about-values-container">
@@ -287,9 +380,17 @@ export default function AboutUs() {
             </h2>
           </motion.div>
 
+<<<<<<< HEAD
           <div className="about-team-grid" style={{ display: 'flex', justifyContent: 'center' }}>
             {[
               { name: "Pruthul Nalla", role: "Founder", image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=1000&auto=format&fit=crop" }
+=======
+          <div className="about-team-grid">
+            {[
+              { name: "Alexander Chen", role: "Founder & Principal", image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1000&auto=format&fit=crop" },
+              { name: "Sarah Mitchell", role: "Design Director", image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=1000&auto=format&fit=crop" },
+              { name: "Marcus Williams", role: "Technical Director", image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=1000&auto=format&fit=crop" }
+>>>>>>> 288e84a271674fc9a510bd9f967d0a2af25d5b05
             ].map((member, index) => (
               <motion.div
                 key={member.name}
