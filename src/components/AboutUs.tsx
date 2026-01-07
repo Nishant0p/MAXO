@@ -1,8 +1,8 @@
-import { useRef, useEffect, useState } from 'react';
+import { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
-import TiltedCard, { Orb } from './TiltedCard';
+import { Orb } from './TiltedCard';
 import StaggeredMenu from './StaggeredMenu';
 import './AboutUs.css';
 import Footer from './Footer';
@@ -41,23 +41,11 @@ export default function AboutUs() {
   const heroRef = useRef(null);
   const storyRef = useRef(null);
 
-  const [isTablet, setIsTablet] = useState(false);
-
   const navigate = useNavigate();
   const navigateTo = (page: string) => {
     // Accept both 'contact' and '/contact'
     navigate(page.startsWith('/') ? page : `/${page}`);
   };
-
-  useEffect(() => {
-    const checkDevice = () => {
-      const width = window.innerWidth;
-      setIsTablet(width >= 768 && width < 1024);
-    };
-    checkDevice();
-    window.addEventListener('resize', checkDevice);
-    return () => window.removeEventListener('resize', checkDevice);
-  }, []);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -193,7 +181,7 @@ export default function AboutUs() {
             className="about-story-image-wrapper"
           >
             <img
-              src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?q=80&w=2653&auto=format&fit=crop"
+              src="/home.gif"
               alt="Architecture Design"
               className="about-story-image"
             />
@@ -288,51 +276,68 @@ export default function AboutUs() {
             viewport={{ once: true }}
             className="about-team-header"
           >
-            <p className="about-section-label">Leadership</p>
-            <h2 className="about-team-title">
-              Meet Our <span style={{ fontStyle: 'italic' }}>Team</span>
-            </h2>
+            
           </motion.div>
 
-          <div className="about-team-grid" style={{ display: 'flex', justifyContent: 'center' }}>
-            {[
-              { name: "Pruthul Nalla", role: "Founder", image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?q=80&w=1000&auto=format&fit=crop" }
-            ].map((member, index) => (
-              <motion.div
-                key={member.name}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: index * 0.15 }}
-                className="about-team-member"
-              >
-                {/* Mobile Image */}
-                <div className="about-team-image-mobile">
-                  <img src={member.image} alt={member.name} />
-                </div>
-                
-                {/* Desktop TiltedCard */}
-                <div className="about-team-image-desktop">
-                  <TiltedCard
-                    imageSrc={member.image}
-                    altText={member.name}
-                    captionText={member.role}
-                    containerHeight={isTablet ? '320px' : '380px'}
-                    containerWidth="100%"
-                    imageHeight={isTablet ? '300px' : '350px'}
-                    imageWidth={isTablet ? '240px' : '280px'}
-                    scaleOnHover={1.05}
-                    rotateAmplitude={12}
-                    showMobileWarning={false}
-                    showTooltip={true}
-                  />
-                </div>
-                
-                <h3 className="about-team-name">{member.name}</h3>
-                <p className="about-team-role">{member.role}</p>
-              </motion.div>
-            ))}
-          </div>
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="about-team-content"
+            style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              gap: '4rem',
+              maxWidth: '1200px',
+              margin: '0 auto',
+              flexDirection: window.innerWidth < 768 ? 'column' : 'row'
+            }}
+          >
+            {/* Image Section */}
+            <div style={{ flex: '0 0 300px' }}>
+              <img 
+                src="/founder.jpeg"
+                alt="Divya"
+                style={{
+                  width: '100%',
+                  height: '400px',
+                  objectFit: 'cover',
+                  borderRadius: '8px'
+                }}
+              />
+            </div>
+            
+            {/* Text Section */}
+            <div style={{ flex: '1' }}>
+              <h3 style={{ 
+                fontSize: '2.5rem', 
+                fontWeight: '600', 
+                marginBottom: '0.5rem',
+                color: '#333'
+              }}>
+                Divya Patel
+              </h3>
+              
+              <p style={{ 
+                fontSize: '1.2rem', 
+                fontWeight: '500', 
+                color: '#666',
+                marginBottom: '1.5rem'
+              }}>
+                Founder & Principal Architect
+              </p>
+              
+              <p style={{ 
+                fontSize: '1rem', 
+                lineHeight: '1.6', 
+                color: '#555',
+                maxWidth: '500px'
+              }}>
+                Divya has experienced architecture and art across diverse cultures through extensive travel, bringing a global perspective to design, one that emphasizes boundless creative and technological possibilities within art, architecture, and design. He seamlessly blends innovative design thinking with diverse research methodologies, while challenging existing disciplinary boundaries and contributing to emerging spatial design practice and knowledge.<br /><br /> Divya pursued his Bachelor's in architecture degree in 2014, after which he worked in India as an architect, then he decided to pursue Masters in architecture from Bartlett School of Architecture, London. Subsequently, he worked as an architect and urban designer at Benoy, London for three years, before establishing MAXO Architects & Designers in 2024.
+              </p>
+            </div>
+          </motion.div>
         </div>
       </section>
 
