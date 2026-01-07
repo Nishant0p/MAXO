@@ -188,7 +188,7 @@ export function MaxoLanding() {
 
     {/* Third Section: Work Gallery */}
     <div style={{ width: '100%' }}>
-      <WorkGallery isMobile={isMobile} />
+      <WorkGallery />
     </div>
 
     {/* Fourth Section: Dome Gallery */}
