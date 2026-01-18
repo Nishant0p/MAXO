@@ -44,6 +44,11 @@ export default function WorkProjectPage() {
   const [showAllImages, setShowAllImages] = useState(false);
 
   useEffect(() => {
+    // Scroll to top when page loads
+    window.scrollTo(0, 0);
+  }, [projectUid]);
+
+  useEffect(() => {
     let cancelled = false;
 
     async function load() {
