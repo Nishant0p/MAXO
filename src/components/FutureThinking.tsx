@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Lightbulb, Zap, Globe, Cpu, Leaf, Users, X } from 'lucide-react';
 // import { useLocation, useNavigate } from 'react-router-dom';
 import Footer from './Footer';
@@ -11,7 +12,8 @@ const InsightModal: React.FC<{
   isOpen: boolean;
   onClose: () => void;
   isMobile: boolean;
-}> = ({ insight, isOpen, onClose, isMobile }) => {
+  onViewMore: (insight: any) => void;
+}> = ({ insight, isOpen, onClose, isMobile, onViewMore }) => {
   if (!isOpen || !insight) return null;
 
   return (
@@ -120,33 +122,29 @@ const InsightModal: React.FC<{
           </p>
 
           <div style={{ display: 'flex', gap: '20px', alignItems: 'center' }}>
-            {(insight.link || insight.data?.link) && (
-              <a
-                href={insight.link || insight.data?.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{
-                  padding: '12px 30px',
-                  backgroundColor: '#000',
-                  color: '#fff',
-                  border: 'none',
-                  fontSize: '0.9rem',
-                  fontWeight: '600',
-                  cursor: 'pointer',
-                  transition: 'opacity 0.2s',
-                  textDecoration: 'none',
-                  display: 'inline-block'
-                }}
-                onMouseEnter={(e) => {
-                  (e.target as HTMLAnchorElement).style.opacity = '0.8';
-                }}
-                onMouseLeave={(e) => {
-                  (e.target as HTMLAnchorElement).style.opacity = '1';
-                }}
-              >
-                VIEW MORE
-              </a>
-            )}
+            <button
+              onClick={() => onViewMore(insight)}
+              style={{
+                padding: '12px 30px',
+                backgroundColor: '#000',
+                color: '#fff',
+                border: 'none',
+                fontSize: '0.9rem',
+                fontWeight: '600',
+                cursor: 'pointer',
+                transition: 'opacity 0.2s',
+                textDecoration: 'none',
+                display: 'inline-block'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.opacity = '0.8';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.opacity = '1';
+              }}
+            >
+              VIEW MORE
+            </button>
             <p style={{
               color: 'rgba(0, 0, 0, 0.6)',
               fontSize: '0.95rem',
@@ -236,6 +234,8 @@ const InsightModal: React.FC<{
 
 export default function FutureThinking({ navigateTo }: { navigateTo: (page: string) => void }) {
   console.log('FutureThinking component rendering...');
+  
+  const navigate = useNavigate();
   
   // const location = useLocation();
   // const navigate = useNavigate();
@@ -695,6 +695,14 @@ export default function FutureThinking({ navigateTo }: { navigateTo: (page: stri
         isOpen={!!selectedInsight} 
         onClose={() => setSelectedInsight(null)}
         isMobile={isMobile}
+        onViewMore={(insight) => {
+          // Store insight in sessionStorage for the detail page
+          sessionStorage.setItem('researchInsights', JSON.stringify([
+            ...prismaticInsights.length > 0 ? prismaticInsights : insights
+          ]));
+          // Navigate to the insight page
+          navigate(`/future/insight/${insight.id || insight.title?.toLowerCase().replace(/\s+/g, '-')}`);
+        }}
       />
 
       <Footer navigateTo={navigateTo} />

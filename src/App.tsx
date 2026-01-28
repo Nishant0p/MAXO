@@ -15,6 +15,7 @@ import Footer from './components/Footer';
 import SharedHeader from './components/SharedHeader';
 import WorkCategoryPage from './components/work/WorkCategoryPage';
 import WorkProjectPage from './components/work/WorkProjectPage';
+import ResearchInsightPage from './components/ResearchInsightPage';
 
 
 
@@ -309,13 +310,14 @@ function AppRoutes() {
         <Route path="/contact" element={<PageWrapper><ContactWithNav /></PageWrapper>} />
         <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
         <Route path="/work" element={<PageWrapper><OurWorkWithNav /></PageWrapper>} />
-           <Route path="/work/:categoryUid" element={<WorkCategoryPage />} />
+        <Route path="/work/:categoryUid" element={<WorkCategoryPage />} />
         <Route path="/work/:categoryUid/:projectUid" element={<WorkProjectPage />} />
         <Route path="/projects" element={<Navigate to="/work" replace />} />
         <Route path="/projects/:categoryUid" element={<LegacyProjectsRedirect />} />
         <Route path="/allproject" element={<Navigate to="/work" replace />} />
         <Route path="/news" element={<PageWrapper><NewsWithNav /></PageWrapper>} />
         <Route path="/future" element={<PageWrapper><FutureWithNav /></PageWrapper>} />
+        <Route path="/future/insight/:insightId" element={<PageWrapper><ResearchInsightPage /></PageWrapper>} />
         <Route path="/architect" element={<PageWrapper><ArchitectContact /></PageWrapper>} />
       </Routes>
     </Suspense>
