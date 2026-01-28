@@ -140,16 +140,37 @@ const InsightModal: React.FC<{
 
                 <div style={{
                   paddingTop: '30px',
-                  borderTop: '2px solid rgba(0, 0, 0, 0.1)'
+                  borderTop: '2px solid rgba(0, 0, 0, 0.1)',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center'
                 }}>
                   <p style={{
                     color: 'rgba(0, 0, 0, 0.6)',
                     fontSize: '1rem',
                     fontStyle: 'italic',
-                    margin: 0
+                    margin: 0,
+                    flex: 1
                   }}>
                     — {insight.author || insight.data?.author}
                   </p>
+                  {(insight.link || insight.data?.link) && (
+                    <a
+                      href={insight.link || insight.data?.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        fontSize: '0.9rem',
+                        color: '#0077B5',
+                        textDecoration: 'none',
+                        fontWeight: '500',
+                        marginLeft: '20px',
+                        whiteSpace: 'nowrap'
+                      }}
+                    >
+                      Read More →
+                    </a>
+                  )}
                 </div>
               </div>
             )}
@@ -240,16 +261,37 @@ const InsightModal: React.FC<{
 
                 <div style={{
                   paddingTop: '20px',
-                  borderTop: '1px solid #e0e0e0'
+                  borderTop: '1px solid #e0e0e0',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center'
                 }}>
                   <p style={{
                     color: 'rgba(0, 0, 0, 0.6)',
                     fontSize: '0.85rem',
                     fontStyle: 'italic',
-                    margin: 0
+                    margin: 0,
+                    flex: 1
                   }}>
                     — {insight.author || insight.data?.author}
                   </p>
+                  {(insight.link || insight.data?.link) && (
+                    <a
+                      href={insight.link || insight.data?.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        fontSize: '0.75rem',
+                        color: '#0077B5',
+                        textDecoration: 'none',
+                        fontWeight: '500',
+                        marginLeft: '12px',
+                        whiteSpace: 'nowrap'
+                      }}
+                    >
+                      Read More →
+                    </a>
+                  )}
                 </div>
               </div>
             )}
