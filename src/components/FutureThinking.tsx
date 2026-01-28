@@ -511,7 +511,7 @@ export default function FutureThinking({ navigateTo }: { navigateTo: (page: stri
           gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fit, minmax(350px, 1fr))',
           gap: isMobile ? '20px' : '30px'
         }}>
-          {innovations.map((innovation, index) => {
+          {innovations.map((innovation) => {
             const IconComponent = innovation.icon;
             return (
               <div
@@ -588,7 +588,7 @@ export default function FutureThinking({ navigateTo }: { navigateTo: (page: stri
           gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
           gap: isMobile ? '30px' : '40px'
         }}>
-          {(prismaticInsights.length > 0 ? prismaticInsights : insights).map((insight: any, index: number) => (
+          {(prismaticInsights.length > 0 ? prismaticInsights : insights).map((insight: any) => (
             <article
               key={insight.id || insight.title}
               onClick={() => setSelectedInsight(insight)}
