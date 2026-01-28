@@ -827,14 +827,15 @@ export default function AboutUs() {
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
                   <img 
-                    src="https://freeimage.host/i/fgRkZKX" 
-                    alt="Recommender"
+                    src="https://media.licdn.com/dms/image/v2/D5603AQH8_rAL8jCBYg/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1704197325848?e=2147483647&v=beta&t=u9M8H_3N_t7v5KZ_zVvX3X5s3X5s3X5s" 
+                    alt="Shivani Rastogi"
                     style={{
                       width: '60px',
                       height: '60px',
                       borderRadius: '50%',
                       objectFit: 'cover'
                     }}
+                    onError={(e) => { (e.target as HTMLImageElement).src = 'https://via.placeholder.com/60x60?text=SR'; }}
                   />
                   <div>
                     <h4 style={{ fontSize: '1.1rem', fontWeight: '600', color: '#333', marginBottom: '0.25rem' }}>
