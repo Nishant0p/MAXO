@@ -1,15 +1,344 @@
 import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
-import { Lightbulb, Zap, Globe, Cpu, Leaf, Users } from 'lucide-react';
+import { Lightbulb, Zap, Globe, Cpu, Leaf, Users, X } from 'lucide-react';
 // import { useLocation, useNavigate } from 'react-router-dom';
 import Footer from './Footer';
 import StaggeredMenu from './StaggeredMenu';
+import { createPrismicClient } from '../prismicClient';
+
+// Research Insight Modal Component 
+const InsightModal: React.FC<{
+  insight: any;
+  isOpen: boolean;
+  onClose: () => void;
+  isMobile: boolean;
+}> = ({ insight, isOpen, onClose, isMobile }) => {
+  // Don't render anything if modal is not open or no insight selected
+  if (!isOpen || !insight) return null;
+
+  return (
+        <div
+          onClick={onClose}
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.7)',
+            zIndex: 1000,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: 0,
+            animation: 'fadeIn 0.3s ease-in'
+          }}
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              backgroundColor: '#fff',
+              borderRadius: 0,
+              width: '100%',
+              height: '100%',
+              display: 'grid',
+              gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr',
+              overflow: 'hidden'
+            }}
+          >
+            {/* Close Button */}
+            <button
+              onClick={onClose}
+              style={{
+                position: 'fixed',
+                top: '30px',
+                right: '30px',
+                background: 'rgba(0, 0, 0, 0.6)',
+                border: 'none',
+                borderRadius: '50%',
+                width: '50px',
+                height: '50px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                zIndex: 1002,
+                color: 'white',
+                transition: 'all 0.3s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'rgba(0, 0, 0, 0.8)';
+                e.currentTarget.style.transform = 'scale(1.1)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'rgba(0, 0, 0, 0.6)';
+                e.currentTarget.style.transform = 'scale(1)';
+              }}
+            >
+              <X size={24} />
+            </button>
+
+            {/* Left Side - Content */}
+            {!isMobile && (
+              <div style={{ 
+                padding: '60px 60px 60px 80px', 
+                display: 'flex', 
+                flexDirection: 'column',
+                overflowY: 'auto',
+                backgroundColor: '#fafafa'
+              }}>
+                <div style={{ marginBottom: '30px' }}>
+                  <span style={{
+                    color: 'rgba(0, 0, 0, 0.6)',
+                    fontSize: '0.9rem',
+                    fontWeight: '500',
+                    textTransform: 'uppercase',
+                    letterSpacing: '1px'
+                  }}>
+                    {insight.date || insight.data?.date}
+                  </span>
+                </div>
+
+                <h1 style={{
+                  fontSize: '3rem',
+                  fontWeight: 600,
+                  margin: '0 0 30px 0',
+                  lineHeight: 1.3,
+                  color: '#000'
+                }}>
+                  {insight.title || insight.data?.title}
+                </h1>
+
+                {(insight.description || insight.data?.description) && (
+                  <div style={{
+                    padding: '24px',
+                    backgroundColor: '#fff',
+                    borderRadius: '8px',
+                    marginBottom: '30px',
+                    borderLeft: '5px solid #000'
+                  }}>
+                    <p style={{
+                      fontSize: '1.1rem',
+                      lineHeight: 1.7,
+                      color: 'rgba(0, 0, 0, 0.8)',
+                      margin: 0,
+                      fontWeight: '500'
+                    }}>
+                      {insight.description || insight.data?.description}
+                    </p>
+                  </div>
+                )}
+
+                <p style={{
+                  fontSize: '1.05rem',
+                  lineHeight: 1.8,
+                  color: 'rgba(0, 0, 0, 0.8)',
+                  marginBottom: '40px',
+                  flex: 1
+                }}>
+                  {insight.content || insight.data?.content}
+                </p>
+
+                <div style={{
+                  paddingTop: '30px',
+                  borderTop: '2px solid rgba(0, 0, 0, 0.1)'
+                }}>
+                  <p style={{
+                    color: 'rgba(0, 0, 0, 0.6)',
+                    fontSize: '1rem',
+                    fontStyle: 'italic',
+                    margin: 0
+                  }}>
+                    — {insight.author || insight.data?.author}
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* Right Side - Image (or Full Content on Mobile) */}
+            <div style={{
+              display: 'flex',
+              flexDirection: 'column',
+              backgroundColor: '#e0e0e0',
+              overflowY: 'auto'
+            }}>
+              {/* Main Image */}
+              <div style={{
+                height: isMobile ? '40vh' : '100%',
+                backgroundColor: '#e0e0e0',
+                overflow: 'hidden'
+              }}>
+                <img
+                  src={insight.image || insight.data?.image?.url || 'https://via.placeholder.com/500x600?text=Insight'}
+                  alt={insight.title || insight.data?.title}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover'
+                  }}
+                />
+              </div>
+            </div>
+
+            {/* Mobile Layout - Content Below Image */}
+            {isMobile && (
+              <div style={{
+                gridColumn: '1',
+                padding: '40px 24px 24px',
+                display: 'flex',
+                flexDirection: 'column',
+                overflowY: 'auto',
+                backgroundColor: '#fafafa'
+              }}>
+                <div style={{ marginBottom: '20px' }}>
+                  <span style={{
+                    color: 'rgba(0, 0, 0, 0.6)',
+                    fontSize: '0.85rem',
+                    fontWeight: '500',
+                    textTransform: 'uppercase'
+                  }}>
+                    {insight.date || insight.data?.date}
+                  </span>
+                </div>
+
+                <h2 style={{
+                  fontSize: '2rem',
+                  fontWeight: 600,
+                  margin: '0 0 20px 0',
+                  lineHeight: 1.4,
+                  color: '#000'
+                }}>
+                  {insight.title || insight.data?.title}
+                </h2>
+
+                {(insight.description || insight.data?.description) && (
+                  <div style={{
+                    padding: '16px',
+                    backgroundColor: '#fff',
+                    borderRadius: '8px',
+                    marginBottom: '20px',
+                    borderLeft: '4px solid #000'
+                  }}>
+                    <p style={{
+                      fontSize: '0.95rem',
+                      lineHeight: 1.6,
+                      color: 'rgba(0, 0, 0, 0.8)',
+                      margin: 0
+                    }}>
+                      {insight.description || insight.data?.description}
+                    </p>
+                  </div>
+                )}
+
+                <p style={{
+                  fontSize: '0.95rem',
+                  lineHeight: 1.6,
+                  color: 'rgba(0, 0, 0, 0.8)',
+                  marginBottom: '30px'
+                }}>
+                  {insight.content || insight.data?.content}
+                </p>
+
+                <div style={{
+                  paddingTop: '20px',
+                  borderTop: '1px solid #e0e0e0'
+                }}>
+                  <p style={{
+                    color: 'rgba(0, 0, 0, 0.6)',
+                    fontSize: '0.85rem',
+                    fontStyle: 'italic',
+                    margin: 0
+                  }}>
+                    — {insight.author || insight.data?.author}
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+  );
+};
 
 export default function FutureThinking({ navigateTo }: { navigateTo: (page: string) => void }) {
+  console.log('FutureThinking component rendering...');
+  
   // const location = useLocation();
   // const navigate = useNavigate();
 
   const [isMobile, setIsMobile] = useState(() => (typeof window === 'undefined' ? false : window.innerWidth <= 768));
+  const [prismaticInsights, setPrismicInsights] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false); // Start as false - data will load in background
+  const [selectedInsight, setSelectedInsight] = useState<any | null>(null);
+
+  // Debug: Track when selectedInsight changes
+  useEffect(() => {
+    console.log('selectedInsight changed:', selectedInsight);
+  }, [selectedInsight]);
+
+  // Fetch data from Prismic
+  useEffect(() => {
+    const fetchInsights = async () => {
+      // Set a very short timeout - if Prismic takes too long, skip it
+      const timeout = setTimeout(() => {
+        console.log('Prismic fetch timeout - using default data');
+        setLoading(false);
+      }, 1500); // 1.5 second timeout
+
+      try {
+        const prismicClient = createPrismicClient();
+        if (!prismicClient) {
+          console.log('Prismic client not initialized - using default data');
+          clearTimeout(timeout);
+          setLoading(false);
+          return;
+        }
+
+        console.log('Fetching insights from Prismic...');
+        const response = await prismicClient.getByType('research_insight');
+        
+        if (!response || !response.results) {
+          console.log('No Prismic response - using default data');
+          clearTimeout(timeout);
+          setLoading(false);
+          return;
+        }
+
+        console.log('Prismic insights fetched:', response.results);
+        
+        // Map Prismic data safely
+        try {
+          const mappedInsights = response.results.map((doc: any) => {
+            if (!doc || !doc.data) return null;
+            return {
+              id: doc.id,
+              title: doc.data.title || '',
+              date: doc.data.date || '',
+              content: doc.data.content || '',
+              description: doc.data.description || '',
+              author: doc.data.author || '',
+              image: doc.data.image?.url || '',
+              data: doc.data
+            };
+          }).filter(Boolean);
+          
+          if (mappedInsights.length > 0) {
+            setPrismicInsights(mappedInsights);
+            console.log('Mapped insights:', mappedInsights);
+          }
+        } catch (mapError) {
+          console.error('Error mapping Prismic data:', mapError);
+        }
+
+        clearTimeout(timeout);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching Prismic insights:', error);
+        clearTimeout(timeout);
+        setLoading(false);
+      }
+    };
+
+    fetchInsights();
+  }, []);
 
   useEffect(() => {
     const onResize = () => setIsMobile(window.innerWidth <= 768);
@@ -64,21 +393,49 @@ export default function FutureThinking({ navigateTo }: { navigateTo: (page: stri
       title: 'The Future of Work Environments',
       date: 'November 2024',
       content: 'As remote work becomes permanent for many, office spaces are evolving into collaboration hubs rather than individual workstations. We\'re designing spaces that prioritize flexibility, wellness, and community building.',
-      author: 'Sarah Johnson, Creative Director'
+      author: 'Sarah Johnson, Creative Director',
+      image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?w=800&h=600&fit=crop',
+      description: 'Flexible workspace design with integrated wellness features and collaborative zones for hybrid work models.'
     },
     {
       title: 'Climate-Responsive Architecture',
       date: 'October 2024',
       content: 'Buildings of the future will actively respond to environmental conditions. From self-cooling facades to rain-harvesting systems, architecture is becoming a living, breathing organism.',
-      author: 'Michael Chen, Lead Architect'
+      author: 'Michael Chen, Lead Architect',
+      image: 'https://images.unsplash.com/photo-1518779578993-ec2be8dbf4c9?w=800&h=600&fit=crop',
+      description: 'Advanced sustainable systems including bio-responsive facades, renewable energy integration, and water management solutions.'
     },
     {
       title: 'Digital-Physical Integration',
       date: 'September 2024',
       content: 'The boundary between digital and physical spaces is dissolving. We\'re creating environments where digital interfaces seamlessly blend with physical architecture to enhance user experience.',
-      author: 'Emily Rodriguez, Interior Designer'
+      author: 'Emily Rodriguez, Interior Designer',
+      image: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&h=600&fit=crop',
+      description: 'Immersive AR/VR experiences integrated with physical architecture for enhanced user interaction and spatial awareness.'
     }
   ];
+
+  // Show loading state
+  if (loading) {
+    return (
+      <div style={{ 
+        backgroundColor: '#e8e8e8', 
+        color: 'black', 
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '20px'
+      }}>
+        <div style={{ textAlign: 'center' }}>
+          <h1 style={{ fontSize: '2rem', marginBottom: '20px' }}>Loading Future Thinking...</h1>
+          <p style={{ fontSize: '1.2rem', color: '#666' }}>Please wait</p>
+        </div>
+      </div>
+    );
+  }
+
+  console.log('Rendering main component, loading is false');
 
   return (
     <div style={{ backgroundColor: '#e8e8e8', color: 'black', minHeight: '100vh' }}>
@@ -101,10 +458,7 @@ export default function FutureThinking({ navigateTo }: { navigateTo: (page: stri
 
 
       {/* Hero Section */}
-      <motion.section
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1 }}
+      <section
         style={{
           padding: isMobile ? '96px 20px 56px' : '120px 40px 80px',
           textAlign: 'center',
@@ -115,10 +469,7 @@ export default function FutureThinking({ navigateTo }: { navigateTo: (page: stri
           backgroundRepeat: 'no-repeat'
         }}
       >
-        <motion.h1
-          initial={{ opacity: 0, y: 50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.8 }}
+        <h1
           style={{
             fontSize: isMobile ? '2.6rem' : '4rem',
             fontWeight: 300,
@@ -127,11 +478,8 @@ export default function FutureThinking({ navigateTo }: { navigateTo: (page: stri
           }}
         >
           Future <span style={{ fontWeight: 'bold' }}>Thinking</span>
-        </motion.h1>
-        <motion.p
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4, duration: 0.8 }}
+        </h1>
+        <p
           style={{
             fontSize: isMobile ? '1rem' : '1.2rem',
             color: 'rgba(255, 255, 255, 0.9)',
@@ -142,15 +490,12 @@ export default function FutureThinking({ navigateTo }: { navigateTo: (page: stri
         >
           Exploring emerging trends, innovative technologies, and visionary concepts 
           that will shape the future of design and architecture.
-        </motion.p>
-      </motion.section>
+        </p>
+      </section>
 
       {/* Innovation Areas */}
       <section style={{ padding: isMobile ? '56px 20px' : '80px 40px', maxWidth: '1200px', margin: '0 auto' }}>
-        <motion.h2
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6, duration: 0.8 }}
+        <h2
           style={{
             fontSize: '2.5rem',
             fontWeight: 300,
@@ -159,7 +504,7 @@ export default function FutureThinking({ navigateTo }: { navigateTo: (page: stri
           }}
         >
           Innovation <span style={{ fontWeight: 'bold' }}>Areas</span>
-        </motion.h2>
+        </h2>
 
         <div style={{
           display: 'grid',
@@ -169,11 +514,8 @@ export default function FutureThinking({ navigateTo }: { navigateTo: (page: stri
           {innovations.map((innovation, index) => {
             const IconComponent = innovation.icon;
             return (
-              <motion.div
+              <div
                 key={innovation.title}
-                initial={{ opacity: 0, y: 50 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.8 + index * 0.1, duration: 0.8 }}
                 style={{
                   padding: isMobile ? '24px' : '30px',
                   borderRadius: '12px',
@@ -222,18 +564,15 @@ export default function FutureThinking({ navigateTo }: { navigateTo: (page: stri
                 }}>
                   {innovation.timeline}
                 </div>
-              </motion.div>
+              </div>
             );
           })}
         </div>
       </section>
 
-      {/* Insights & Research */}
+      {/* Research & Insights Section */}
       <section style={{ padding: isMobile ? '56px 20px' : '80px 40px', maxWidth: '1200px', margin: '0 auto' }}>
-        <motion.h2
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.8, duration: 0.8 }}
+        <h2
           style={{
             fontSize: '2.5rem',
             fontWeight: 300,
@@ -242,69 +581,134 @@ export default function FutureThinking({ navigateTo }: { navigateTo: (page: stri
           }}
         >
           Research & <span style={{ fontWeight: 'bold' }}>Insights</span>
-        </motion.h2>
+        </h2>
 
         <div style={{
           display: 'grid',
-          gap: '40px'
+          gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)',
+          gap: isMobile ? '30px' : '40px'
         }}>
-          {insights.map((insight, index) => (
-            <motion.article
-              key={insight.title}
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 2 + index * 0.2, duration: 0.8 }}
+          {(prismaticInsights.length > 0 ? prismaticInsights : insights).map((insight: any, index: number) => (
+            <article
+              key={insight.id || insight.title}
+              onClick={() => setSelectedInsight(insight)}
               style={{
-                padding: isMobile ? '24px' : '40px',
                 borderRadius: '12px',
                 backgroundColor: 'rgba(0, 0, 0, 0.05)',
-                border: '1px solid rgba(0, 0, 0, 0.1)'
+                border: '1px solid rgba(0, 0, 0, 0.1)',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                display: 'flex',
+                flexDirection: 'column',
+                height: '100%',
+                overflow: 'hidden'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.08)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.05)';
               }}
             >
+              {/* Image Container */}
               <div style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'flex-start',
-                marginBottom: '20px',
-                flexWrap: 'wrap',
-                gap: '15px'
+                width: '100%',
+                height: '200px',
+                overflow: 'hidden',
+                backgroundColor: '#e0e0e0'
               }}>
+                <img
+                  src={insight.image || insight.data?.image?.url || 'https://via.placeholder.com/400x300?text=Research+Insight'}
+                  alt={insight.title || insight.data?.title}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'cover',
+                    transition: 'transform 0.5s ease',
+                  }}
+                  onMouseEnter={(e) => {
+                    (e.target as HTMLImageElement).style.transform = 'scale(1.05)';
+                  }}
+                  onMouseLeave={(e) => {
+                    (e.target as HTMLImageElement).style.transform = 'scale(1)';
+                  }}
+                />
+              </div>
+
+              {/* Content Container */}
+              <div style={{
+                padding: isMobile ? '24px' : '32px',
+                display: 'flex',
+                flexDirection: 'column',
+                flex: 1
+              }}>
+                <div style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'flex-start',
+                  marginBottom: '20px',
+                  gap: '10px'
+                }}>
+                  <span style={{
+                    color: 'rgba(0, 0, 0, 0.6)',
+                    fontSize: '0.85rem',
+                    whiteSpace: 'nowrap',
+                    fontWeight: '500'
+                  }}>
+                    {insight.date || insight.data?.date}
+                  </span>
+                </div>
                 <h3 style={{
-                  fontSize: '1.5rem',
+                  fontSize: isMobile ? '1.2rem' : '1.3rem',
                   fontWeight: 600,
-                  margin: 0,
+                  margin: '0 0 16px 0',
+                  lineHeight: 1.4
+                }}>
+                  {insight.title || insight.data?.title}
+                </h3>
+
+                {/* Description */}
+                {(insight.description || insight.data?.description) && (
+                  <p style={{
+                    fontSize: '0.9rem',
+                    lineHeight: 1.5,
+                    color: 'rgba(0, 0, 0, 0.7)',
+                    margin: '0 0 12px 0'
+                  }}>
+                    {insight.description || insight.data?.description}
+                  </p>
+                )}
+
+                <p style={{
+                  fontSize: '0.95rem',
+                  lineHeight: 1.6,
+                  color: 'rgba(0, 0, 0, 0.8)',
+                  margin: '0 0 20px 0',
                   flex: 1
                 }}>
-                  {insight.title}
-                </h3>
-                <span style={{
+                  {insight.content || insight.data?.content}
+                </p>
+                <p style={{
                   color: 'rgba(0, 0, 0, 0.6)',
-                  fontSize: '0.9rem',
-                  whiteSpace: 'nowrap'
+                  fontSize: '0.85rem',
+                  fontStyle: 'italic',
+                  margin: 0
                 }}>
-                  {insight.date}
-                </span>
+                  — {insight.author || insight.data?.author}
+                </p>
               </div>
-              <p style={{
-                fontSize: '1.1rem',
-                lineHeight: 1.7,
-                color: 'rgba(0, 0, 0, 0.8)',
-                margin: '0 0 20px 0'
-              }}>
-                {insight.content}
-              </p>
-              <p style={{
-                color: 'rgba(0, 0, 0, 0.6)',
-                fontSize: '0.9rem',
-                fontStyle: 'italic',
-                margin: 0
-              }}>
-                — {insight.author}
-              </p>
-            </motion.article>
+            </article>
           ))}
         </div>
       </section>
+
+      {/* Modal */}
+      <InsightModal 
+        insight={selectedInsight} 
+        isOpen={!!selectedInsight} 
+        onClose={() => setSelectedInsight(null)}
+        isMobile={isMobile}
+      />
 
       <Footer navigateTo={navigateTo} />
     </div>

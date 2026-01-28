@@ -181,7 +181,7 @@ export default function AboutUs() {
             className="about-story-image-wrapper"
           >
             <img
-              src="https://images.prismic.io/maxo-architecture/aWTxhwIvOtkhBUBk_homecopy.gif?auto=format,compress&w=800&q=70"
+              src="https://images.prismic.io/maxo-architecture/aWTxhwIvOtkhBUBk_homecopy.gif?auto=format,compress&w=800&q=70&frame=1"
               alt="Architecture Design"
               className="about-story-image"
               loading="lazy"
@@ -203,8 +203,6 @@ export default function AboutUs() {
             <motion.div style={{ overflow: 'hidden', marginBottom: '32px' }}>
               <motion.h2 variants={fadeInUp} className="about-story-title">
                 Redefining Architecture
-                <br />
-                <span style={{ fontStyle: 'italic' }}>Since 1999</span>
               </motion.h2>
             </motion.div>
             
@@ -795,6 +793,73 @@ export default function AboutUs() {
                     onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
                   />
                   <span style={{ fontSize: '0.8rem', color: '#666', fontWeight: '500' }}>Foster + Partners</span>
+                </div>
+                <a 
+                  href="https://www.linkedin.com/in/divya-patel-20/details/recommendations/?detailScreenTabIndex=0"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ 
+                    fontSize: '0.95rem',
+                    color: '#0077B5',
+                    textDecoration: 'none',
+                    fontWeight: '500',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '4px'
+                  }}
+                >
+                  View Recommendation
+                  <ArrowUpRight size={14} />
+                </a>
+              </div>
+
+              {/* Recommendation Card - Shivani Rastogi */}
+              <div
+                style={{
+                  background: '#fff',
+                  padding: '2rem',
+                  borderRadius: '12px',
+                  boxShadow: '0 4px 20px rgba(0,0,0,0.08)',
+                  border: '1px solid #f0f0f0',
+                  minWidth: '350px',
+                  flex: '0 0 auto'
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '1rem' }}>
+                  <img 
+                    src="https://freeimage.host/i/fgRkZKX" 
+                    alt="Recommender"
+                    style={{
+                      width: '60px',
+                      height: '60px',
+                      borderRadius: '50%',
+                      objectFit: 'cover'
+                    }}
+                  />
+                  <div>
+                    <h4 style={{ fontSize: '1.1rem', fontWeight: '600', color: '#333', marginBottom: '0.25rem' }}>
+                      Shivani Rastogi
+                    </h4>
+                  </div>
+                </div>
+                {/* Company Box */}
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  padding: '0.5rem 0.75rem',
+                  background: '#f8f9fa',
+                  borderRadius: '6px',
+                  marginBottom: '1rem',
+                  border: '1px solid #e9ecef'
+                }}>
+                  <img 
+                    src="https://freeimage.host/i/fgRkLPt" 
+                    alt="Skidmore, Owings, Merrill"
+                    style={{ width: '20px', height: '20px', borderRadius: '4px', objectFit: 'contain' }}
+                    onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                  />
+                  <span style={{ fontSize: '0.8rem', color: '#666', fontWeight: '500' }}>Skidmore, Owings, Merrill</span>
                 </div>
                 <a 
                   href="https://www.linkedin.com/in/divya-patel-20/details/recommendations/?detailScreenTabIndex=0"
